@@ -2,7 +2,7 @@ import React from 'react';
 
 const Filter = ({ filters, onChange }) => {
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; 
     onChange({ ...filters, [name]: value });
   };
   // CUSTOM HOOK 

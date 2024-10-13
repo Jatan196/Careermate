@@ -10,3 +10,7 @@ node_modules/
 # Ignore build outputs
 /dist
 /build
+
+#ignore pkl
+
+/mlModel/model.pkl
