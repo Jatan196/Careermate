@@ -112,7 +112,7 @@ const QuizProvider = ({ children }) => {
         accuracy: Math.round((correct / total) * 100)
       };
     });
-
+    console.log(accuracyData);
     return accuracyData;
   };
 
@@ -130,4 +130,4 @@ const QuizProvider = ({ children }) => {
   );
 };
 
-export { QuizContext, QuizProvider };
+export { QuizContext, QuizProvider};

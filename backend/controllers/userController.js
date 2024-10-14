@@ -1,5 +1,6 @@
 
-import  pool  from '../config/localdb.js'; // Your PostgreSQL connection pool
+//import { pool } from './dbConnection.js'; // Your PostgreSQL connection pool
+import pool from "../config/localdb.js";
 import { spawn } from 'child_process';
 
 export const login = async () => {
@@ -8,8 +9,26 @@ export const login = async () => {
 export const logout = async () => {
 
 }
-export const registerCouns = async () => {
+export const registerCouns = async (req, res) => {
+    try {
+        // Get data from the request body 
+        const { student_id, counsellor_id, status_of_request, slot_id } = req.body; 
+        console.log(student_id, counsellor_id, status_of_request, slot_id);
+        // const a = stringToInteger(student_id);
+        // const b = stringToInteger(counsellor_id);
+        // const c = stringToInteger(slot_id);
+        const values = [student_id, counsellor_id, status_of_request, slot_id];
+        const insertStudentQuery = `
+                INSERT INTO Request (student_id, counsellor_id, status_of_request, slot_id)
+                VALUES ($1, $2, $3, $4) RETURNING slot_id`;
+        const result = await pool.query(insertStudentQuery, values);
+        // Step 3: Send success response
+        res.status(201).json({ message: 'Sesion registered successfully!' });
 
+    } catch (error) {
+        console.error('Error registering session:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 export const registerStud = async (req, res) => {
     try {
