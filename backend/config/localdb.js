@@ -6,7 +6,7 @@ const { Pool } = pg;
 const pool = new Pool({
   user: 'postgres',     // Your PostgreSQL username
   host: 'localhost',         // PostgreSQL is hosted locally
-  database: 'CareerMBE', // Name of the database
+  database: 'SerialBackend', // Name of the database
   password: '123456', // Your PostgreSQL password
   port: 5432,                // Default PostgreSQL port
 });
