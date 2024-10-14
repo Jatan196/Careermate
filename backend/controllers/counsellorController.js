@@ -8,6 +8,21 @@ import pool from "../config/localdb.js";
 
 // const { Pool } = pg;
 // const pool = new Pool(config);
+export const counsellorReg = async (req,res) => {
+    const { id, name ,phone ,email ,password, highest_qualification,experience } = req.body;
+
+    try {
+        const reg= await pool.query(
+            'INSERT INTO Counsellor (id,name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5,$6,$7)',[id, name ,phone ,email ,password, highest_qualification, experience ]
+        );
+        res.status(201).json({ message: "Counsellor register successfully"});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Registration failed" });
+    }
+
+}
+
 export const getAllCounsInfo = async (req, res) => {
 
     try {
