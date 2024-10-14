@@ -1,9 +1,14 @@
 import React, { createContext, useState, useEffect } from 'react';
-
+import axios from "axios";
 // Create a QuizContext
 const QuizContext = createContext();
 
-const QuizProvider = ({ children }) => {
+const QuizProvider = async ({ children }) => {
+
+  const res= await axios.get('http://localhost:5001/api/v1/quiz/make');
+  console.log(res);
+
+
   const [questions] = useState([
     {
       text: "Annie and Alexei are running a race. When the race starts, Alexei starts running 9 ft. per second...",

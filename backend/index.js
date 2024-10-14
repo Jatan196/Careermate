@@ -6,6 +6,7 @@ import http from "http";
 //import client from "./config/database.js";
 import counsRoutes from "./routes/counsellorRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
+import quizRoutes from "./routes/quizRoutes.js";
 //import { Client } from "pg";
 import pg from "pg";
 //import config from './config/database.js'; // Your database configuration
@@ -29,6 +30,7 @@ app.use(express.json());
 
 app.use("/api/v1/counsellor",counsRoutes);
 app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/quiz",quizRoutes);
 
 // const getCounsellors = async () => {
 //   console.log("working---------------");

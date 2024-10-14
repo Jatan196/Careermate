@@ -11,7 +11,7 @@ import pool from "../config/localdb.js";
 // const pool = new Pool(config);
 export const getAllCounsInfo = async (req, res) => {
     try {
-        const counsellors = await pool.query('SELECT id,name,email,rating,experience FROM Counsellor');
+        const counsellors = await pool.query('SELECT id,name,email,rating FROM Counsellor');
         res.json({
             message: "Got all counsellors",
             counsellors

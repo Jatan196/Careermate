@@ -44,7 +44,7 @@ const CounsellorList = () => {
     <div className="flex" style={{marginLeft: "192px"}}>
       {/* <VerticalNavBar /> */}
       <div className="p-4 w-full">
-        <Filter filters={filters} onChange={handleFilterChange} />
+        {/* <Filter filters={filters} onChange={handleFilterChange} /> */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
           {counselors?.map((counselor) => (
             <Card counselor={counselor} />

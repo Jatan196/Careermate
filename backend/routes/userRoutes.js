@@ -1,5 +1,5 @@
 import express from "express"
-import { registerCouns, registerStud } from "../controllers/userController.js";
+import {registerStud,getProfileByUserId, requestSession } from "../controllers/userController.js";
 
 const router=express.Router();
 
@@ -10,8 +10,7 @@ const router=express.Router();
 // router.route("/getAllSlots").get(getAllSlots);
 
 router.route("/registerStud").post(registerStud);
-router.route("/registerCouns").post(registerCouns);
-
-// router.route("/changeReqStatus").post(changeReqStatus);
+router.route("/registerCouns").post(requestSession); 
+router.route("/getProfileById").get(getProfileByUserId);
 
 export default router;
