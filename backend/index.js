@@ -1,7 +1,7 @@
 import express from "express"; // (2nd ->> way)change in package.json
 import dotenv from "dotenv";
 //import connectDB from "./config/database.js";
-import cors from "cors"
+import cors from "cors";
 import http from "http";
 //import client from "./config/database.js";
 import counsRoutes from "./routes/counsellorRoutes.js";

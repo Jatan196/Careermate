@@ -11,6 +11,7 @@ import CounsellorList from './components/CounsellorList';
 import {RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Landing from './components/Landing';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import VerticalNavBar from './components/verticalNavBar';
 
 // function QuizApp() {
 //   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -125,6 +126,7 @@ function App() {
   return (
     <Router>
       <div>
+        <VerticalNavBar />
         <Routes>
           {/* Route for Home page */}
           <Route path="/" element={<QuizProvider><QuizWindow /></QuizProvider>} />

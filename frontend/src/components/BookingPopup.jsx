@@ -1,8 +1,20 @@
 import React from 'react';
+import axios from 'axios';
 
 const BookingPopup = ({ slot, counselor, onClose }) => {
-  const handleConfirmBooking = () => {
-    // Implement booking logic here
+  const handleConfirmBooking = async () => {
+    try {
+      const response = await axios.post('http://localhost:5001/api/v1/user/registerCouns', {
+        student_id: 1,  // Make sure the 'id' is defined here
+        counsellor_id: counselor.id,
+        status_of_request: 'Pending',
+        slot_id: slot.slot_id
+      });
+
+      console.log(response);  // Handle the API response       // Return or set the data as needed
+    } catch (error) {
+      console.error('Error registering session:', error);
+    }
     onClose();
   };
 
@@ -11,8 +23,8 @@ const BookingPopup = ({ slot, counselor, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-4">Confirm Booking</h2>
         <p><strong>Counselor:</strong> {counselor.name}</p>
-        <p><strong>Date:</strong> {slot.date}</p>
-        <p><strong>Time:</strong> {slot.time}</p>
+        <p><strong>Start-Time:</strong> {slot.start_time}</p>
+        <p><strong>End-Time:</strong> {slot.end_time}</p>
         <div className="mt-6 flex justify-between">
           <button
             onClick={onClose}

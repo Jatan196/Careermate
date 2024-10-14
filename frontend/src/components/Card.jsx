@@ -1,11 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import SlotTable from './SlotTable';
 import BookingPopup from './BookingPopup';
+import axios from 'axios'
 
 const Card = ({ counselor }) => {
   const [showSlots, setShowSlots] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBookingPopup, setShowBookingPopup] = useState(false);
+  const [slots, setSlots] = useState();
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      console.log(counselor.id);
+      try {
+        const response = await axios(`http://localhost:5001/api/v1/counsellor/getAllSlots`, {
+          params: {
+            id: counselor.id,
+          }
+        });
+        console.log(response);
+        const result = await response.data.slots.rows;
+        setSlots(result); // Assuming your query result is in rows
+      } catch (error) {
+        console.error('Error fetching slots:', error);
+      }
+    };
+    fetchSlots();
+  }, [counselor.id]); // Effect depends on the counsellorId
 
   const handleSlotSelect = (slot) => {
     setSelectedSlot(slot);
@@ -17,8 +38,8 @@ const Card = ({ counselor }) => {
       <div className="flex justify-between items-center">
         <div>
           <h3 className="text-xl font-bold">{counselor.name}</h3>
-          <p>{counselor.domain}</p>
-          <p>{counselor.experience} years of experience</p>
+          <p><b>Experience : </b>{counselor.experience ? counselor.experience : 0} years</p>
+          <p><b>Rating : </b>{counselor.rating ? counselor.rating : 'Not rated yet'}</p>
         </div>
         <button
           onClick={() => setShowSlots(!showSlots)}
@@ -27,7 +48,7 @@ const Card = ({ counselor }) => {
           See Free Slots
         </button>
       </div>
-      {showSlots && <SlotTable slots={counselor.slots} onSelect={handleSlotSelect} />}
+      {showSlots && <SlotTable slots={slots} onSelect={handleSlotSelect} />}
       {showBookingPopup && (
         <BookingPopup
           slot={selectedSlot}
