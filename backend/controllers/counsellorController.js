@@ -7,6 +7,21 @@ import pg from "pg";
 //import config from '../config/database.js'; // Your database configuration
 import pool from "../config/localdb.js"; 
 
+export const counsellorReg = async (req,res) => {
+    const { id, name ,phone ,email ,password, highest_qualification } = req.body;
+
+    try {
+        const reg= await pool.query(
+            'INSERT INTO Counsellor (id,name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5,$6)',[id, name ,phone ,email ,password, highest_qualification ]
+        );
+        res.status(201).json({ message: "Counsellor register successfully"});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Registration failed" });
+    }
+
+}
+
 // const { Pool } = pg;
 // const pool = new Pool(config);
 export const getAllCounsInfo = async (req, res) => {

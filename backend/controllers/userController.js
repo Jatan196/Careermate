@@ -3,8 +3,31 @@
 import pool from "../config/localdb.js";
 import { spawn } from 'child_process';
 
-export const login = async () => {
+export const login = async (req,res) => {
+    try {
+        const {email,password} = req.body;
+        if(!id || !password){
+            return res.status(400).json({message:" Id and password are required"});
+        }
+        const checklogin= await pool.query(`SELECT  id,name,email FROM student where id=$1 and password=$2`,[email,password]);
 
+        if (checklogin.rows.length === 0) {
+            return res.status(400).json({ message: 'Invalid id or password' });
+        }   
+        const student=checklogin.rows[0];
+
+        res.status(200).json({
+            message:"Login successful",
+            student: {
+                id: student.id,
+                name: student.name,
+                email: student.email
+            }
+        })
+    } catch (err) {
+        console.error('Error logging in:', err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 export const logout = async () => {
 
