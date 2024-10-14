@@ -2,9 +2,10 @@
 // import bcrypt from "bcryptjs";
 // import jwt from "jsonwebtoken";
 // import validator from 'validator';
-import pg from "pg";
+
+import pg from "pg"; 
 //import config from '../config/database.js'; // Your database configuration
-import pool from "../config/localdb.js";
+import pool from "../config/localdb.js"; 
 
 // const { Pool } = pg;
 // const pool = new Pool(config);
@@ -24,14 +25,13 @@ export const counsellorReg = async (req,res) => {
 }
 
 export const getAllCounsInfo = async (req, res) => {
-
     try {
         const counsellors = await pool.query('SELECT id,name,email,rating,experience FROM Counsellor');
         res.json({
             message: "Got all counsellors",
             counsellors
         });
-    }
+    } 
     catch (err) {
         console.error('D', err.stack);
         res.status(500).json({ error: 'Database connection failed' });
@@ -41,6 +41,7 @@ export const getAllSlots = async (req,res) => {
     const { id } = req.query;
     console.log(id);
 
+    console.log("hi");
     try {
         const slots = await pool.query(`SELECT * FROM Timeslot where counsellor_id = ${id}`);
         res.json({
@@ -87,6 +88,7 @@ export const addNewSlot = async (req, res) => {
         res.status(500).json({ error: "Failed to add new timeslot" });
     }
 };
+
 export const changeReqStatus = async (req,res) => {
     const { stud_id,couns_id,status } = req.body;
 
