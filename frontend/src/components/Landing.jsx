@@ -6,7 +6,7 @@ const CareerMate = () => {
   return (
     <div className="career-page">
       {/* Header */}
-      <header className="header">
+      {/* <header className="header">
         <div className="logo">CareerMate</div>
         <nav className="nav">
           <ul>
@@ -15,7 +15,7 @@ const CareerMate = () => {
           </ul>
         </nav>
         <button className="start-button">Let's Start</button>
-      </header>
+      </header> */}
 
       {/* Main Section */}
       <section className="hero-section">

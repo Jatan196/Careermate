@@ -37,6 +37,7 @@ export const makeQuiz = async (req, res) => {
                 WHERE subject IN (${questionTypes[field].map(subject => `'${subject}'`).join(', ')})
                 GROUP BY difficulty; 
             `;
+           
             let questionCounts = await pool.query(totalQuestionsQuery);
             questionCounts = questionCounts.rows;
             console.log(questionCounts);
@@ -103,8 +104,8 @@ export const makeQuiz = async (req, res) => {
 };
 export const makeQuizz = async (req, res) => {
     try {
-        const { stud_id } = req.body;
-
+        const  stud_id  =req.body.id;
+console.log("hi",   req);
         // Fetch interests from the database
         const interestQuery = `SELECT field, interest FROM predicted_interest WHERE id = ${stud_id}`;
         let interestResults = await pool.query(interestQuery);
@@ -128,7 +129,11 @@ export const makeQuizz = async (req, res) => {
 
         // Loop through interests to fetch question data for each field and difficulty
         for (const { field, interest } of interests) {
-            if (!questionTypes[field]) continue; // If the field is not defined in questionTypes, skip it
+            if (!questionTypes[field]){
+                console.log("skipping",field);
+                continue; 
+
+            } // If the field is not defined in questionTypes, skip it
 
             const fieldData = {
                 field: field,
@@ -152,11 +157,15 @@ export const makeQuizz = async (req, res) => {
                     GROUP BY difficulty;
                 `;
                 const totalQuestions = await pool.query(totalQuestionsQuery);
+                
+                console.log(totalQuestions);
+
                 const totalQuestionsByDifficulty = totalQuestions.rows.reduce((acc, row) => {
                     acc[row.difficulty] = row.count;
-                    return acc;
+                    return acc; 
                 }, { 'Easy': 0, 'Medium': 0, 'Hard': 0 });
 
+                console.log(totalQuestionsByDifficulty)
                 // Calculate how many questions to fetch for each difficulty
                 const totalFieldQuestions = Math.floor((totalQuestionsByDifficulty['Easy'] + totalQuestionsByDifficulty['Medium'] + totalQuestionsByDifficulty['Hard']));
 
@@ -167,7 +176,7 @@ export const makeQuizz = async (req, res) => {
 
                 // Fetch Easy questions
                 const easyQuery = `
-                    SELECT id, problem_statement 
+                    SELECT id, problem_statment ,difficulty
                     FROM Question 
                     WHERE subject = '${subject}' 
                     AND difficulty = 'Easy'
@@ -179,7 +188,7 @@ export const makeQuizz = async (req, res) => {
 
                 // Fetch Medium questions
                 const mediumQuery = `
-                    SELECT id, problem_statement 
+                    SELECT id, problem_statment,difficulty 
                     FROM Question 
                     WHERE subject = '${subject}' 
                     AND difficulty = 'Medium'
@@ -191,7 +200,7 @@ export const makeQuizz = async (req, res) => {
 
                 // Fetch Hard questions
                 const hardQuery = `
-                    SELECT id, problem_statement 
+                    SELECT id, problem_statment,difficulty 
                     FROM Question 
                     WHERE subject = '${subject}' 
                     AND difficulty = 'Hard'
@@ -203,8 +212,8 @@ export const makeQuizz = async (req, res) => {
 
                 // Push subject data into field data
                 fieldData.subjects.push(subjectData);
-            }
-
+            } 
+            console.log("################################one iteration done################################")
             // Push field data (with subjects and their questions) to the overall set of questions
             setOfQuestions.push(fieldData);
         }

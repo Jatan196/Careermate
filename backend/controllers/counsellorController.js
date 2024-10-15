@@ -108,7 +108,6 @@ export const changeReqStatus = async (req,res) => {
             ack
         });
     }
-
     catch (err) {
         console.error('D', err.stack);
         res.status(500).json({ error: 'Database connection failed' });

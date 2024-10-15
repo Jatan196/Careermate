@@ -3,11 +3,17 @@ import axios from "axios";
 // Create a QuizContext
 const QuizContext = createContext();
 
-const QuizProvider = async ({ children }) => {
 
-  const res= await axios.get('http://localhost:5001/api/v1/quiz/make');
+const fetchQuestion = async (id) => {
+  const temp={
+    id
+  }
+  const res = await axios.get('http://localhost:5001/api/v1/quiz/make',temp);
   console.log(res);
-
+}
+const QuizProvider = ({ children }) => {
+const id=5;
+  fetchQuestion(id);
 
   const [questions] = useState([
     {
@@ -122,17 +128,17 @@ const QuizProvider = async ({ children }) => {
   };
 
   return (
-    <QuizContext.Provider value={{ 
-        questions, 
-        filteredQuestions, // Provide filtered questions
-        selectedAnswers, 
-        setSelectedAnswer, 
-        filterQuestions,
-        calculateAccuracyBySubject // Provide the filterQuestions function
+    <QuizContext.Provider value={{
+      questions,
+      filteredQuestions, // Provide filtered questions
+      selectedAnswers,
+      setSelectedAnswer,
+      filterQuestions,
+      calculateAccuracyBySubject // Provide the filterQuestions function
     }}>
       {children}
     </QuizContext.Provider>
   );
 };
 
-export { QuizContext, QuizProvider};
+export { QuizContext, QuizProvider };
