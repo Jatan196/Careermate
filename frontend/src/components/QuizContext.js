@@ -4,16 +4,16 @@ import axios from "axios";
 const QuizContext = createContext();
 
 
-const fetchQuestion = async (id) => {
-  const temp={
-    id
-  }
-  const res = await axios.get('http://localhost:5001/api/v1/quiz/make',temp);
-  console.log(res);
-}
+// const fetchQuestion = async (id) => {
+//   const temp={
+//     id
+//   }
+//   const res = await axios.get('http://localhost:5001/api/v1/quiz/make',temp);
+//   console.log(res);
+// }
 const QuizProvider = ({ children }) => {
-const id=5;
-  fetchQuestion(id);
+  const id=5;
+  // fetchQuestion(id);
 
   const [questions] = useState([
     {

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import './CounsLanding.css';
+import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 function CounsLanding() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to handle the modal open/close
   const [startTime, setStartTime] = useState('00:00:00');
   const [endTime, setEndTime] = useState('00:00:00');
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
+  const location = useLocation();
 
   // Open the modal
   const openModal = () => {
@@ -47,6 +50,20 @@ function CounsLanding() {
 
     // Clear error message
     setErrorMessage('');
+
+    const fetchSlots = async () => {
+      try {
+        const response = await axios.post(`http://localhost:5001/api/v1/counsellor/addNewSlot`, {
+          counsellor_id: location.state,
+          start_time: startTime,
+          end_time: endTime
+        });
+        console.log(response);
+      } catch (error) {
+        console.error('Error adding slots:', error);
+      }
+    };
+    fetchSlots();
     
     // Close the modal after submitting
     closeModal();

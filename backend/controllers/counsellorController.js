@@ -8,19 +8,37 @@ import pg from "pg";
 import pool from "../config/localdb.js"; 
 
 export const counsellorReg = async (req,res) => {
-    const { id, name ,phone ,email ,password, highest_qualification } = req.body;
+    const { domains, name ,phone ,email ,password, highest_qualification } = req.body;
 
     try {
         const reg= await pool.query(
-            'INSERT INTO Counsellor (id,name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5,$6)',[id, name ,phone ,email ,password, highest_qualification ]
+            'INSERT INTO Counsellor (name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5) returning id',[name ,phone ,email ,password, highest_qualification ]
         );
-        res.status(201).json({ message: "Counsellor register successfully"});
+        console.log(reg);
+        res.status(201).json({ message: "Counsellor register succes sfully",couns_id: reg.rows[0]['id']});
+        for (let i=0; i<domains.length; i++) {
+            await pool.query('insert into domains (id, domain) values($1,$2)', [reg.rows[0]['id'],domains[i]]);
+        }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Registration failed" });
     }
 
 }
+
+// export const addDomains = async (req,res) => {
+//     const {} = req.body;
+//     try {
+//         const reg= await pool.query(
+//             'INSERT INTO Counsellor (name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5)',[name ,phone ,email ,password, highest_qualification ]
+//         );
+//         res.status(201).json({ message: "Counsellor register successfully"});
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: "Registration failed" });
+//     }
+// }
+
 
 // const { Pool } = pg;
 // const pool = new Pool(config);

@@ -56,7 +56,7 @@ export const requestSession = async (req, res) => {
 export const registerStud = async (req, res) => {
     try {
         // Get data from the request body 
-        const { acad,userName, namee, phone, email, password, hobbies,edu_achieve,extra_achieve } = req.body; //, name, phone, email, password, hobbies, edu_achieve, interest 
+        const { acad, namee, phone, email, password, hobbies,edu_achieve,extra_achieve } = req.body; //, name, phone, email, password, hobbies, edu_achieve, interest 
 
         // Step 1: Insert student data into the Student table
         
