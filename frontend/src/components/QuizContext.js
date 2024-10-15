@@ -1,9 +1,20 @@
 import React, { createContext, useState, useEffect } from 'react';
-
+import axios from "axios";
 // Create a QuizContext
 const QuizContext = createContext();
 
+
+const fetchQuestion = async (id) => {
+  const temp={
+    id
+  }
+  const res = await axios.get('http://localhost:5001/api/v1/quiz/make',temp);
+  console.log(res);
+}
 const QuizProvider = ({ children }) => {
+const id=5;
+  fetchQuestion(id);
+
   const [questions] = useState([
     {
       text: "Annie and Alexei are running a race. When the race starts, Alexei starts running 9 ft. per second...",
@@ -117,17 +128,17 @@ const QuizProvider = ({ children }) => {
   };
 
   return (
-    <QuizContext.Provider value={{ 
-        questions, 
-        filteredQuestions, // Provide filtered questions
-        selectedAnswers, 
-        setSelectedAnswer, 
-        filterQuestions,
-        calculateAccuracyBySubject // Provide the filterQuestions function
+    <QuizContext.Provider value={{
+      questions,
+      filteredQuestions, // Provide filtered questions
+      selectedAnswers,
+      setSelectedAnswer,
+      filterQuestions,
+      calculateAccuracyBySubject // Provide the filterQuestions function
     }}>
       {children}
     </QuizContext.Provider>
   );
 };
 
-export { QuizContext, QuizProvider};
+export { QuizContext, QuizProvider };

@@ -9,8 +9,8 @@ const VerticalNavBar = () => {
       <nav className="flex flex-col space-y-4">
         <a href="/Home" className="text-yellow-500">Home</a>
         <a href="#profile" className="text-red-500">Profile</a>
-        <a href="#appointments" className="text-pink-500">Appointments</a>
-        <a href="#settings" className="text-yellow-500">Settings</a>
+        {/* <a href="#appointments" className="text-pink-500">Appointments</a>
+        <a href="#settings" className="text-yellow-500">Settings</a> */}
       </nav>
     </div>
     </div>

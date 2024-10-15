@@ -18,7 +18,7 @@ const Landing = () => {
   return (
     <div className="career-page">
       {/* Header */}
-      <header className="header">
+      {/* <header className="header">
         <div className="logo">CareerMate</div>
         <nav className="nav">
           <ul>
@@ -30,8 +30,13 @@ const Landing = () => {
             </li>
           </ul>
         </nav>
+<<<<<<< HEAD
         <button className="start-button" onClick={openModal}>Let's Start</button> {/* Open modal on click */}
       </header>
+=======
+        <button className="start-button">Let's Start</button>
+      </header> */}
+>>>>>>> 15d3a12dc2b3bc861814b773e032e06b5d13316f
 
       {/* Main Section */}
       <section className="hero-section">

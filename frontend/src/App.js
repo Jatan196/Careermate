@@ -146,6 +146,7 @@ function App() {
           <Route path="/counsellor" element={<CounsellorList />} />
           <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission/>}/>
           <Route path="/counslanding" element={<CounsLanding />}/>
+          {/* <Route path="/counslanding" element={<CounsLanding />}/> */}
         </Routes>
       </div>
     </Router>

@@ -26,7 +26,7 @@ export const counsellorReg = async (req,res) => {
 // const pool = new Pool(config);
 export const getAllCounsInfo = async (req, res) => {
     try {
-        const counsellors = await pool.query('SELECT id,name,email,rating,experience FROM Counsellor');
+        const counsellors = await pool.query('SELECT id,name,email,rating FROM Counsellor');
         res.json({
             message: "Got all counsellors",
             counsellors
@@ -108,7 +108,6 @@ export const changeReqStatus = async (req,res) => {
             ack
         });
     }
-
     catch (err) {
         console.error('D', err.stack);
         res.status(500).json({ error: 'Database connection failed' });

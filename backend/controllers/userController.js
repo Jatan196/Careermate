@@ -32,7 +32,7 @@ export const login = async (req,res) => {
 export const logout = async () => {
 
 }
-export const registerCouns = async (req, res) => {
+export const requestSession = async (req, res) => {
     try {
         // Get data from the request body 
         const { student_id, counsellor_id, status_of_request, slot_id } = req.body; 
@@ -46,7 +46,7 @@ export const registerCouns = async (req, res) => {
                 VALUES ($1, $2, $3, $4) RETURNING slot_id`;
         const result = await pool.query(insertStudentQuery, values);
         // Step 3: Send success response
-        res.status(201).json({ message: 'Sesion registered successfully!' });
+        res.status(201).json({ message: 'Session registered successfully!' });
 
     } catch (error) {
         console.error('Error registering session:', error);
@@ -88,7 +88,6 @@ export const registerStud = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
-
 export const addNewProfile = async ({acad,studentId}) => {
     return new Promise((resolve, reject) => {
         // Step 1: Trigger the Python ML Model using spawn
@@ -140,8 +139,24 @@ export const addNewProfile = async ({acad,studentId}) => {
 export const updateProfile = async () => {
     // similar
 }
-export const getProfileByUserId = async () => {
+export const getProfileByUserId = async (req,res) => {
+    try {
+        const {id}=req.body;
 
+        const basicDetails=await pool.query(`Select * from Student where id=${id}`);
+        const predictions=await pool.query(`Select field,interest from predicted_Interest where id=${id}`);
+
+        console.log(basicDetails.rows,predictions.rows);
+
+        return res.status(200).json({
+            "message":"Got the profile",
+            basicDetails,
+            predictions 
+        })
+    } catch (error) { 
+        console.error('Error registering student:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 }
 
 function stringToInteger(str) {
