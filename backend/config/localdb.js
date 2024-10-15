@@ -7,7 +7,7 @@ const pool = new Pool({
   user: 'postgres',     // Your PostgreSQL username
   host: 'localhost',         // PostgreSQL is hosted locally
   database: 'SerialBackend', // Name of the database
-  password: '123456', // Your PostgreSQL password
+  password: '123', // Your PostgreSQL password
   port: 5432,                // Default PostgreSQL port
 });
 const testConnection = async () => {

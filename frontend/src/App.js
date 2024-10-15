@@ -13,7 +13,11 @@ import Landing from './components/Landing';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VerticalNavBar from './components/verticalNavBar';
 import CounsLanding from './components/CounsLanding';
-
+import Counsellor_Details_Submission from './components/Counsellor_Details_Submission'; 
+import Student_Details_Submission from './components/Student_Details_Submission';
+import CounsellorLogin from './components/CounsellorLogin';
+import StudentLogin from './components/StudentLogin';
+import StudentLanding from './components/StudentLanding';
 // function QuizApp() {
 //   const [currentQuestion, setCurrentQuestion] = useState(0);
 //   const { questions, selectedAnswers } = useContext(QuizContext);
@@ -130,13 +134,17 @@ function App() {
         <VerticalNavBar />
         <Routes>
           {/* Route for Home page */}
+          <Route path="/Home" element={<Landing />}/>
           <Route path="/" element={<QuizProvider><QuizWindow /></QuizProvider>} />
 
           {/* Route for About page */}
+
+          <Route path="/Student_Details_Submission" element={<Student_Details_Submission/>}/>
+          <Route path="StudentLogin" element={<StudentLogin/>}/>
+          <Route path="/StudentLanding" element={<StudentLanding/>}/>
+          <Route path="/CounsellorLogin" element={<CounsellorLogin/>}/>
           <Route path="/counsellor" element={<CounsellorList />} />
-
-          <Route path="/home" element={<Landing />}/>
-
+          <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission/>}/>
           <Route path="/counslanding" element={<CounsLanding />}/>
         </Routes>
       </div>

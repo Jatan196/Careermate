@@ -1,8 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaInstagram, FaLinkedin, FaYoutube } from 'react-icons/fa';
 import './Landing.css';
+import { Link } from 'react-router-dom';
+import LoginModal from './LoginModal'; // Import the LoginModal component
 
-const CareerMate = () => {
+const Landing = () => {
+  const [isModalOpen, setModalOpen] = useState(false); // State to manage modal visibility
+
+  const openModal = () => {
+    setModalOpen(true); // Open modal
+  };
+
+  const closeModal = () => {
+    setModalOpen(false); // Close modal
+  };
+
   return (
     <div className="career-page">
       {/* Header */}
@@ -10,11 +22,15 @@ const CareerMate = () => {
         <div className="logo">CareerMate</div>
         <nav className="nav">
           <ul>
-            <li>Home</li>
-            <li>About Us</li>
+            <li>
+              <Link to="/Home">Home</Link>
+            </li>
+            <li>
+              <Link to="/about">About Us</Link>
+            </li>
           </ul>
         </nav>
-        <button className="start-button">Let's Start</button>
+        <button className="start-button" onClick={openModal}>Let's Start</button> {/* Open modal on click */}
       </header>
 
       {/* Main Section */}
@@ -29,7 +45,7 @@ const CareerMate = () => {
           <h2>ABOUT US</h2>
           <p>
             We at CareerMate aim at providing the best guidance and motivation to help students shape their future.
-            We believe that choosing a right career option is necessary as building a brighter future and fostering the skills of students...
+            We believe that choosing the right career option is necessary for building a brighter future and fostering the skills of students...
           </p>
         </div>
       </section>
@@ -86,18 +102,18 @@ const CareerMate = () => {
       <section className="follow-us">
         <h2>FOLLOW US</h2>
         <div className="social-icons">
-          <div className="social-icon">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaInstagram className="icon" />
             <p>Instagram</p>
-          </div>
-          <div className="social-icon">
+          </a>
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaLinkedin className="icon" />
             <p>LinkedIn</p>
-          </div>
-          <div className="social-icon">
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon">
             <FaYoutube className="icon" />
             <p>YouTube</p>
-          </div>
+          </a>
         </div>
       </section>
 
@@ -105,8 +121,11 @@ const CareerMate = () => {
       <footer className="footer">
         <p>&copy; 2024 Developed and Maintained by careermate.org</p>
       </footer>
+
+      {/* Render the Login Modal if it's open */}
+      {isModalOpen && <LoginModal onClose={closeModal} />}
     </div>
   );
 };
 
-export default CareerMate;
+export default Landing;
