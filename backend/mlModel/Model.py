@@ -45,7 +45,7 @@ data = [
 test = data
 
 # Load the model and make predictions
-with open("D:/CareerMate/backend/mlModel/model.pkl", "rb") as f:
+with open("D:/CareerMate/Careermate/backend/mlModel/model.pkl", "rb") as f:
     model = pickle.load(f)
 
 pro = model.predict_proba(test)

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
 
-import './CounsellorLogin.css'; 
+import './CounsellorLogin.css';
 
 const CounsellorLogin = () => {
   const [email, setEmail] = useState('');
@@ -11,12 +13,35 @@ const CounsellorLogin = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(email);
     if (email === '' || password === '') {
       setError('Please enter both email and password');
     } else {
       setError('');
-      // Perform login logic here
-      navigate('/counslanding');
+      const fetchDetails = async () => {
+        try {
+          // Send the email and password to the backend login route
+          const response = await axios('http://localhost:5001/api/v1/counsellor/counsLogin', {
+            params: {
+              emaile: email,
+              password: password
+            }
+          });
+    
+          if (response.status === 200) {
+            const counsData = response.data['couns_id'];
+            console.log(counsData);
+    
+            // Redirect to home page after successful login
+            navigate('/counsLanding', {state: counsData});
+          }
+        }
+        catch (error) {
+          console.error('Error logging in:', error);
+        }
+      };
+      fetchDetails();
+      // navigate('/counslanding');
     }
   };
 
@@ -46,7 +71,7 @@ const CounsellorLogin = () => {
           <div className="form-group">
             <label>Email :- </label>
             <input
-              type="email"
+              type="text"
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}

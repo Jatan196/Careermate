@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';  // <-- Import useNavigate
 import './StudentLanding.css';
+import { useLocation } from 'react-router-dom';
 
 const StudentLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -10,6 +11,8 @@ const StudentLanding = () => {
   const openModal = () => {
     setIsModalOpen(true);
   };
+
+  const location = useLocation();
 
   // Function to close the modal
   const closeModal = () => {

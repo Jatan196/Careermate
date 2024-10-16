@@ -30,7 +30,7 @@ const Landing = () => {
             </li>
           </ul>
         </nav>
-        <button className="start-button">Let's Start</button>
+        <button className="start-button" onClick={openModal}>Let's Start</button>
       </header>
 
       {/* Main Section */}

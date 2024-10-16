@@ -1,16 +1,23 @@
 import React, { useState } from 'react';
 import './Student_Details_Submission.css'; // Assuming you already have the CSS
 import { useNavigate } from 'react-router';
+import axios from 'axios';
 function Student_Details_Submission() {
   const [formData, setFormData] = useState({
-    userName: '',
     namee: '',
     phone: '',
     email: '',
     password: '',
     hobbies: '',
     edu_achieve: '',
-    extra_achieve: ''
+    extra_achieve: '',
+    selfStdyHrs: 0,
+    extraCuri: '',
+    mathScore: 0,
+    langScore: 0,
+    scienceScore: 0,
+    englishScore: 0,
+    sstScore: 0
   });
   
   const navigate= useNavigate();
@@ -26,9 +33,37 @@ function Student_Details_Submission() {
     // Combine domains into a single string (optional)
     // const combinedDomains = domains.filter(Boolean).join(', ');
 
-    const submissionData = { ...formData};
+    // const submissionData = { ...formData};
 
-    console.log(submissionData);
+    console.log(formData);
+
+    try {
+      const response = await axios.post('http://localhost:5001/api/v1/user/registerStud', {
+        namee: formData.namee,  // Make sure the 'id' is defined here
+        email: formData.email,
+        phone: formData.phone,
+        password: formData.password,
+        hobbies: formData.hobbies,
+        edu_achieve: formData.edu_achieve,
+        extra_achieve: formData.extra_achieve,
+        acad: {
+          selfStdyHrs: formData.selfStdyHrs,
+          extraCuri: formData.extraCuri,
+          mathScore: formData.mathScore,
+          langScore: formData.langScore,
+          scienceScore: formData.scienceScore,
+          englishScore: formData.englishScore,
+          sstScore: formData.sstScore
+        }
+      });
+
+      console.log(response);  // Handle the API response       // Return or set the data as needed
+    } catch (error) {
+      console.error('Error registering :', error);
+    }
+    navigate("/Home");
+
+
 
     // try {
     //   const response = await fetch('http://localhost:5000/api/counsellor/register', {
@@ -60,9 +95,7 @@ function Student_Details_Submission() {
         <div className="logo">
           <h1>CareerMate</h1>
         </div>
-        <nav className="navbar">
-          <a href="/">Home</a>
-        </nav>
+        
       </header>
 
       {/* Form */}
@@ -78,6 +111,7 @@ function Student_Details_Submission() {
               placeholder="Enter your name"
               value={formData.namee}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -88,6 +122,7 @@ function Student_Details_Submission() {
               placeholder="Enter your phone number"
               value={formData.phone}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -98,6 +133,7 @@ function Student_Details_Submission() {
               placeholder="Enter your email"
               value={formData.email}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -108,6 +144,7 @@ function Student_Details_Submission() {
               placeholder="Enter your password"
               value={formData.password}
               onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -118,6 +155,83 @@ function Student_Details_Submission() {
               placeholder="Enter your hobbies"
               value={formData.hobbies}
               onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Weekly Self Study Hours: </label>
+            <input
+              type="number"
+              name="selfStdyHrs"
+              placeholder="Enter no. of hours"
+              value={formData.selfStdyHrs}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Maths Score: </label>
+            <input
+              type="number"
+              name="mathScore"
+              placeholder="Enter Math Score"
+              value={formData.mathScore}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Language Score: </label>
+            <input
+              type="number"
+              name="langScore"
+              placeholder="Enter Language Score"
+              value={formData.langScore}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Science Score: </label>
+            <input
+              type="number"
+              name="scienceScore"
+              placeholder="Enter Science Score"
+              value={formData.scienceScore}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>English Score: </label>
+            <input
+              type="number"
+              name="englishScore"
+              placeholder="Enter English Score"
+              value={formData.englishScore}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Social Studies Score: </label>
+            <input
+              type="number"
+              name="sstScore"
+              placeholder="Enter Social Studies Score"
+              value={formData.sstScore}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Do you do extra curricular Activities ? </label>
+            <input
+              type="text"
+              name="extraCuri"
+              placeholder="Enter 'yes' or 'no'"
+              value={formData.extraCuri}
+              onChange={handleInputChange}
+              required
             />
           </div>
           <div className="form-group">
@@ -140,8 +254,9 @@ function Student_Details_Submission() {
               onChange={handleInputChange}
             />
           </div>
+          
 
-          <button onClick={()=>navigate("/StudentLanding")} type="submit" className="submit-btn">Submit</button>
+          <button type="submit" className="submit-btn">Submit</button>
         </form>
       </div>
     </div>

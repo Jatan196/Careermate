@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './CounsLanding.css';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function CounsLanding() {
@@ -14,6 +14,11 @@ function CounsLanding() {
   const openModal = () => {
     setIsModalOpen(true);
   };
+
+  const navigate = useNavigate();
+  const viewRequests = () => {
+    navigate("/Requests", {state: location.state});
+  }
 
   // Close the modal
   const closeModal = () => {
@@ -80,7 +85,7 @@ function CounsLanding() {
               <li>
                 <button className="hover:underline" onClick={openModal}>ADD SLOT</button>
               </li>
-              <li><a href="#" className="hover:underline">REQUEST</a></li>
+              <li><button onClick={viewRequests} className="hover:underline">REQUEST</button></li>
             </ul>
           </nav>
         </div>

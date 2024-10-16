@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './StudentLogin.css'; 
+import axios from 'axios';
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('');
@@ -14,8 +15,29 @@ const StudentLogin = () => {
       setError('Please enter both email and password');
     } else {
       setError('');
-      // Perform login logic here
-      navigate('/StudentLanding');
+      const fetchDetails = async () => {
+        try {
+          // Send the email and password to the backend login route
+          const response = await axios('http://localhost:5001/api/v1/user/stuLogin', {
+            params: {
+              email: email,
+              password: password
+            }
+          });
+    
+          if (response.status === 200) {
+            const stuData = response.data.student['id'];
+            console.log(stuData);
+    
+            // Redirect to home page after successful login
+            navigate('/studentLanding', {state: stuData});
+          }
+        }
+        catch (error) {
+          console.error('Error logging in:', error);
+        }
+      };
+      fetchDetails();
     }
   };
 

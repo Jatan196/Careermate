@@ -56,7 +56,7 @@ function Counsellor_Details_Submission() {
       });
 
       console.log(response);  // Handle the API response       // Return or set the data as needed
-      navigate("/counslanding", {state: response.data['couns_id']});
+      navigate("/Home");
     } catch (error) {
       console.error('Error registering session:', error);
     }

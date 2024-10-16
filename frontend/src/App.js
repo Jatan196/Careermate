@@ -18,6 +18,7 @@ import Student_Details_Submission from './components/Student_Details_Submission'
 import CounsellorLogin from './components/CounsellorLogin';
 import StudentLogin from './components/StudentLogin';
 import StudentLanding from './components/StudentLanding';
+// import Requests from './components/Requests';
 // function QuizApp() {
 //   const [currentQuestion, setCurrentQuestion] = useState(0);
 //   const { questions, selectedAnswers } = useContext(QuizContext);
@@ -140,12 +141,13 @@ function App() {
           {/* Route for About page */}
 
           <Route path="/Student_Details_Submission" element={<Student_Details_Submission/>}/>
-          <Route path="StudentLogin" element={<StudentLogin/>}/>
+          <Route path="/StudentLogin" element={<StudentLogin/>}/>
           <Route path="/StudentLanding" element={<StudentLanding/>}/>
           <Route path="/CounsellorLogin" element={<CounsellorLogin/>}/>
           <Route path="/counsellor" element={<CounsellorList />} />
           <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission/>}/>
           <Route path="/counslanding" element={<CounsLanding />}/>
+          {/* <Route path="/requests" element={<Requests />}/> */}
           {/* <Route path="/counslanding" element={<CounsLanding />}/> */}
         </Routes>
       </div>
