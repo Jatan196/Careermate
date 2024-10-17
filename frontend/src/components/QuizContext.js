@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
-import axios from "axios";
+import axios from 'axios';
+
 // Create a QuizContext
 const QuizContext = createContext();
 
@@ -94,12 +95,6 @@ const QuizProvider = ({ children }) => {
     setFilteredQuestions(filtered);
   };
 
-  // Set filteredQuestions to the original list of questions when the component mounts
-  useEffect(() => {
-    setFilteredQuestions(questions);
-  }, [questions]);
-
-
   const calculateAccuracyBySubject = () => {
     const subjectAccuracy = {};
 
@@ -123,6 +118,7 @@ const QuizProvider = ({ children }) => {
         accuracy: Math.round((correct / total) * 100)
       };
     });
+
     console.log(accuracyData);
     return accuracyData;
   };

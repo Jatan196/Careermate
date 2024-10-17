@@ -1,8 +1,8 @@
 import express from "express"
-import { makeQuiz, makeQuizz } from "../controllers/quizController.js";
+import { makeQuiz, makeQuizOption, makeQuizz, } from "../controllers/quizController.js";
 
 const router=express.Router();
 
-router.route('/make').get(makeQuizz);
+router.route('/make/:id').get(makeQuizOption);
 
 export default router;

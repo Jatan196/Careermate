@@ -83,7 +83,7 @@ function QuizWindow() {
           <div className="quiz-controls">
             <button onClick={handlePrevious}>Previous</button>
             <button onClick={handleNext}>Next</button>
-          </div>
+          </div> 
           <div className="submit-button"><button className="submit" onClick={handleSubmit}>Submit Quiz</button></div>
           <QuestionNavigator setCurrentQuestion={setCurrentQuestion} questions={filteredQuestions} />
         </main>

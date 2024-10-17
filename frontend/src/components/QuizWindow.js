@@ -31,9 +31,9 @@ function QuizWindow() {
     questions.forEach((question, index) => {
       if (selectedAnswers[index] === question.correctAnswer) {
         totalScore += 1;
-      }
+      } 
     });
-    let per = calculateAccuracyBySubject();
+    let per = calculateAccuracyBySubject(); 
     const subjects = [];
     const accuracies = [];
 
@@ -104,7 +104,7 @@ function QuizWindow() {
 
   if (isSubmitted) {
     return (
-      <div className="app-container">
+      <div className="app-container"> 
         <main className="quiz-main" align="center">
           <br></br>
           <h1><b>Quiz Submitted!</b></h1>
