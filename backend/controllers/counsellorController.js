@@ -28,25 +28,34 @@ export const counsellorReg = async (req, res) => {
 }
 
 export const counsLogin = async (req, res) => {
-    const { emaile, password } = req.query;
-    console.log(emaile);
+    const { email, password } = req.query;
+    console.log(email);
     try {
-        const check = await pool.query(`select id,name,password from counsellor where email = $1`, [emaile]);
+        const check = await pool.query(`select id,name,email from counsellor where email = $1 and password = $2`, [email, password]);
         console.log(check);
         if (check.rows.length === 0) {
-            return res.status(400).json({ message: 'Invalid id or password' });
+            return res.status(250).json({ message: 'Invalid id or password' });
         }
-        if (check.rows[0]['password'] != password)
-            return res.status(401).json({ message: "Wrong pasword" });
-        // const accessToken = jwt.sign(
-        //     {
-        //         name: correct.rows[0]['name'],
-        //         email: emaile,
-        //         id: correct.rows[0]['id']
-        //     },
-        //     process.env.ACCESS_TOKEN_SECRET
-        // );
-        res.status(200).json({message: "Counsellor Login Successful", couns_id: check.rows[0]['id'] });
+        console.log(check.rows[0]);
+        const counsellor = check.rows[0];
+        const accessToken = jwt.sign(
+            {
+                counsId: counsellor.id,
+                counsName: counsellor.name,
+                counsEmail: counsellor.email,
+            },
+            process.env.ACCESS_TOKEN_SECRET_COUNSELLOR,
+            { expiresIn: "15m" }
+        );
+        res.status(200).json({
+            message:"Counsellor Login successful",
+            counsellor: {
+                id: counsellor.id,
+                // name: student.name,
+                // email: student.email
+            },
+            accessToken
+        })
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Login Failed" });

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './StudentLogin.css'; 
+import './StudentLogin.css';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode';
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('');
@@ -24,13 +25,25 @@ const StudentLogin = () => {
               password: password
             }
           });
-    
+          console.log(response);
+
           if (response.status === 200) {
-            const stuData = response.data.student['id'];
-            console.log(stuData);
-    
+            const stuId = response.data.student['id'];
+            const stuData = jwtDecode(response.data.accessToken);
+            localStorage.setItem('stuName', stuData.stuName);
+            localStorage.setItem('stuEmail', stuData.stuEmail);
+            localStorage.setItem('stuId', stuData.stuId);
+            // localStorage.setItem('mobile', userData.mobile);
+            console.log(stuId);
+            console.log(localStorage.getItem('stuId'));
+            console.log(localStorage.getItem('stuName'));
+            console.log(localStorage.getItem('stuEmail'));
+
             // Redirect to home page after successful login
-            navigate('/studentLanding', {state: stuData});
+            navigate('/StudentLanding', { state: stuId });
+          }
+          if(response.status===250) {
+            console.log("invalid id or password");
           }
         }
         catch (error) {

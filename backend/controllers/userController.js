@@ -2,6 +2,7 @@
 //import { pool } from './dbConnection.js'; // Your PostgreSQL connection pool
 import pool from "../config/localdb.js";
 import { spawn } from 'child_process';
+import jwt from 'jsonwebtoken';
 
 export const login = async (req,res) => {
     try {
@@ -12,9 +13,20 @@ export const login = async (req,res) => {
         const checklogin= await pool.query(`SELECT  id,name,email FROM student where email=$1 and password=$2`,[email,password]);
 
         if (checklogin.rows.length === 0) {
-            return res.status(400).json({ message: 'Invalid id or password' });
+            return res.status(250).json({ message: 'Invalid id or password' });
         }   
         const student=checklogin.rows[0];
+
+        const accessToken = jwt.sign(
+            {
+              stuName: student.name,
+              stuId: student.id,
+              stuEmail: student.email,
+            },
+            process.env.ACCESS_TOKEN_SECRET_STUDENT,
+            { expiresIn: "15m" }
+          );
+          console.log(accessToken);
 
         res.status(200).json({
             message:"Login successful",
@@ -22,7 +34,8 @@ export const login = async (req,res) => {
                 id: student.id,
                 // name: student.name,
                 // email: student.email
-            }
+            },
+            accessToken
         })
     } catch (err) {
         console.error('Error logging in:', err);

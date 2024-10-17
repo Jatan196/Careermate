@@ -23,18 +23,31 @@ const CounsellorLogin = () => {
           // Send the email and password to the backend login route
           const response = await axios('http://localhost:5001/api/v1/counsellor/counsLogin', {
             params: {
-              emaile: email,
+              email: email,
               password: password
             }
           });
-    
+
           if (response.status === 200) {
-            const counsData = response.data['couns_id'];
-            console.log(counsData);
-    
+            const counsId = response.data.counsellor['id'];
+            const counsData = jwtDecode(response.data.accessToken);
+            localStorage.setItem('counsName', counsData.counsName);
+            localStorage.setItem('counsEmail', counsData.counsEmail);
+            localStorage.setItem('counsId', counsData.counsId);
+            // localStorage.setItem('mobile', userData.mobile);
+            console.log(counsId);
+            console.log(localStorage.getItem('counsId'));
+            console.log(localStorage.getItem('counsName'));
+            console.log(localStorage.getItem('counsEmail'));
+
             // Redirect to home page after successful login
-            navigate('/counsLanding', {state: counsData});
+            navigate('/counslanding', { state: counsId });
           }
+          if (response.status === 250) {
+            console.log("invalid id or password");
+          }
+
+
         }
         catch (error) {
           console.error('Error logging in:', error);
