@@ -4,6 +4,7 @@ import axios from 'axios';
 // Create a QuizContext
 const QuizContext = createContext();
 
+<<<<<<< HEAD
 const fetchQuestions = async (id) => {
   try {
     const res = await axios.get(`http://localhost:5001/api/v1/quiz/make/${id}`);
@@ -22,6 +23,19 @@ const QuizProvider = ({ children }) => {
   const [selectedAnswers, setSelectedAnswers] = useState([]); // State for selected answers
   
   const id = 5; // Hardcoded ID, this can be dynamic
+=======
+
+// const fetchQuestion = async (id) => {
+//   const temp={
+//     id
+//   }
+//   const res = await axios.get('http://localhost:5001/api/v1/quiz/make',temp);
+//   console.log(res);
+// }
+const QuizProvider = ({ children }) => {
+  const id=5;
+  // fetchQuestion(id);
+>>>>>>> a62d638dff85b5e3050e7116641e7629f48c5338
 
   // Fetch questions on component mount
   useEffect(() => {

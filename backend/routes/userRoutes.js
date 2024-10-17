@@ -1,5 +1,5 @@
 import express from "express"
-import {registerStud,getProfileByUserId, requestSession } from "../controllers/userController.js";
+import {registerStud,getProfileByUserId, requestSession, login } from "../controllers/userController.js";
 
 const router=express.Router();
 
@@ -12,5 +12,6 @@ const router=express.Router();
 router.route("/registerStud").post(registerStud);
 router.route("/registerCouns").post(requestSession); 
 router.route("/getProfileById").get(getProfileByUserId);
+router.route("/stuLogin").get(login);
 
 export default router;

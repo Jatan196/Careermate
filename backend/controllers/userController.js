@@ -5,11 +5,11 @@ import { spawn } from 'child_process';
 
 export const login = async (req,res) => {
     try {
-        const {email,password} = req.body;
-        if(!id || !password){
-            return res.status(400).json({message:" Id and password are required"});
-        }
-        const checklogin= await pool.query(`SELECT  id,name,email FROM student where id=$1 and password=$2`,[email,password]);
+        const {email,password} = req.query;
+        // if(!id || !password){
+        //     return res.status(400).json({message:" Id and password are required"});
+        // }
+        const checklogin= await pool.query(`SELECT  id,name,email FROM student where email=$1 and password=$2`,[email,password]);
 
         if (checklogin.rows.length === 0) {
             return res.status(400).json({ message: 'Invalid id or password' });
@@ -20,8 +20,8 @@ export const login = async (req,res) => {
             message:"Login successful",
             student: {
                 id: student.id,
-                name: student.name,
-                email: student.email
+                // name: student.name,
+                // email: student.email
             }
         })
     } catch (err) {
@@ -56,7 +56,7 @@ export const requestSession = async (req, res) => {
 export const registerStud = async (req, res) => {
     try {
         // Get data from the request body 
-        const { acad,userName, namee, phone, email, password, hobbies,edu_achieve,extra_achieve } = req.body; //, name, phone, email, password, hobbies, edu_achieve, interest 
+        const { acad, namee, phone, email, password, hobbies,edu_achieve,extra_achieve } = req.body; //, name, phone, email, password, hobbies, edu_achieve, interest 
 
         // Step 1: Insert student data into the Student table
         
@@ -81,7 +81,7 @@ export const registerStud = async (req, res) => {
         await addNewProfile({acad,studentId});  //studentId, name, edu_achieve, interest);
 
         // Step 3: Send success response
-        res.status(201).json({ message: 'Student registered successfully!' }); //, studentId
+        res.status(201).json({ message: 'Student registered successfully!' , stu_id: studentId}); //, studentId
 
     } catch (error) {
         console.error('Error registering student:', error);
