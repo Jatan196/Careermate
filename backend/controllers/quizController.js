@@ -1,8 +1,11 @@
 import pool from "../config/localdb.js";
 
+
+
 export const addReport = async (req, res) => {
 
 };
+
 export const makeQuiz = async (req, res) => {
     try {
         const { stud_id } = req.body;
@@ -102,10 +105,11 @@ export const makeQuiz = async (req, res) => {
         res.status(500).json({ success: false, message: 'An error occurred while generating the quiz.' });
     }
 };
+
 export const makeQuizz = async (req, res) => {
     try {
-        const  stud_id  =req.body.id;
-console.log("hi",   req);
+        const stud_id  =req.params.id;
+        console.log("hi",   stud_id);
         // Fetch interests from the database
         const interestQuery = `SELECT field, interest FROM predicted_interest WHERE id = ${stud_id}`;
         let interestResults = await pool.query(interestQuery);
@@ -224,4 +228,139 @@ console.log("hi",   req);
         console.error('Error while generating quiz:', error);
         res.status(500).json({ success: false, message: 'An error occurred while generating the quiz.' });
     }
+};
+
+export const makeQuizOption = async (req, res) => {
+    try {
+        const stud_id = req.params.id;
+
+        const interestQuery = `SELECT field, interest FROM predicted_interest WHERE id = ${stud_id}`;
+        let interestResults = await pool.query(interestQuery);
+        interestResults = interestResults.rows;
+
+        const interests = interestResults.map(row => ({ field: row.field, interest: row.interest }));
+        console.log(interests);
+
+        const questionTypes = {
+            'Arts': ['History', 'Sociology', 'Psychology', 'Geography', 'Political Science'],
+            'Commerce': ['Economics', 'Accountancy', 'Business Studies', 'Basic Commercial Knowledge', 'Mathematics'],
+            'PCB': ['Physics', 'Chemistry', 'Biology'],
+            'PCM': ['Physics', 'Chemistry', 'Maths']
+        };
+
+        const setOfQuestions = [];
+
+        for (const { field, interest } of interests) {
+            if (!questionTypes[field]) {
+                console.log("Skipping field:", field);
+                continue;
+            }
+
+            const fieldData = {
+                field: field,
+                subjects: []
+            };
+
+            for (const subject of questionTypes[field]) {
+                const subjectData = {
+                    subject,
+                    easy: [],
+                    medium: [],
+                    hard: []
+                };
+
+                const totalQuestionsQuery = `
+                    SELECT difficulty, COUNT(*) as count 
+                    FROM Question 
+                    WHERE subject = '${subject}'
+                    GROUP BY difficulty;
+                `;
+                const totalQuestions = await pool.query(totalQuestionsQuery);
+                const totalQuestionsByDifficulty = totalQuestions.rows.reduce((acc, row) => {
+                    acc[row.difficulty] = row.count;
+                    return acc;
+                }, { 'Easy': 0, 'Medium': 0, 'Hard': 0 });
+
+                const totalFieldQuestions = Math.floor((totalQuestionsByDifficulty['Easy'] + totalQuestionsByDifficulty['Medium'] + totalQuestionsByDifficulty['Hard']));
+                const easyQCount = Math.min(Math.floor(0.5 * interest * totalFieldQuestions), totalQuestionsByDifficulty['Easy']);
+                const mediumQCount = Math.min(Math.floor(0.3 * interest * totalFieldQuestions), totalQuestionsByDifficulty['Medium']);
+                const hardQCount = Math.min(0.1 * interest * (totalFieldQuestions - totalQuestionsByDifficulty['Easy'] - totalQuestionsByDifficulty['Medium']), totalQuestionsByDifficulty['Hard']);
+
+                const easyQuestionsQuery = `
+                    SELECT id, problem_statment, difficulty 
+                    FROM Question 
+                    WHERE subject = '${subject}' AND difficulty = 'Easy'
+                    ORDER BY RANDOM()
+                    LIMIT ${easyQCount};
+                `;
+                const easyQuestions = await pool.query(easyQuestionsQuery);
+                const easyQuestionIds = easyQuestions.rows.map(q => q.id);
+                subjectData.easy = await fetchQuestionsWithOptions(easyQuestions.rows, easyQuestionIds);
+
+                const mediumQuestionsQuery = `
+                    SELECT id, problem_statment, difficulty 
+                    FROM Question 
+                    WHERE subject = '${subject}' AND difficulty = 'Medium'
+                    ORDER BY RANDOM()
+                    LIMIT ${mediumQCount};
+                `;
+                const mediumQuestions = await pool.query(mediumQuestionsQuery);
+                const mediumQuestionIds = mediumQuestions.rows.map(q => q.id);
+                subjectData.medium = await fetchQuestionsWithOptions(mediumQuestions.rows, mediumQuestionIds);
+
+                const hardQuestionsQuery = `
+                    SELECT id, problem_statment, difficulty 
+                    FROM Question 
+                    WHERE subject = '${subject}' AND difficulty = 'Hard'
+                    ORDER BY RANDOM()
+                    LIMIT ${hardQCount};
+                `;
+                const hardQuestions = await pool.query(hardQuestionsQuery);
+                const hardQuestionIds = hardQuestions.rows.map(q => q.id);
+                subjectData.hard = await fetchQuestionsWithOptions(hardQuestions.rows, hardQuestionIds);
+
+                fieldData.subjects.push(subjectData);
+            }
+
+            setOfQuestions.push(fieldData);
+        }
+
+        res.json({ success: true, questions: setOfQuestions });
+
+    } catch (error) {
+        console.error('Error while generating quiz:', error);
+        res.status(500).json({ success: false, message: 'An error occurred while generating the quiz.' });
+    }
+};
+
+const fetchQuestionsWithOptions = async (questions, questionIds) => {
+    if (questionIds.length === 0) return [];
+
+    const optionsQuery = `
+        SELECT id, option, answer 
+        FROM Option 
+        WHERE id = ANY($1);
+    `;
+    const optionsResult = await pool.query(optionsQuery, [questionIds]);
+    const optionsByQuestion = groupOptionsByQuestion(optionsResult.rows);
+
+    return questions.map(question => ({
+        ...question,
+        options: optionsByQuestion[question.id] || [],
+        correctAnswer: (optionsByQuestion[question.id] || []).filter(opt => opt.answer).map(opt => opt.option)
+    }));
+};
+
+const groupOptionsByQuestion = (options) => {
+    const grouped = {};
+    options.forEach(option => {
+        if (!grouped[option.id]) {
+            grouped[option.id] = [];
+        }
+        grouped[option.id].push({
+            option: option.option,
+            answer: option.answer
+        });
+    });
+    return grouped;
 };

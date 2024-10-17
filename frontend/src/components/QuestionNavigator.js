@@ -6,7 +6,7 @@ const QuestionNavigator = ({ setCurrentQuestion }) => {
 
   return (
     <div className="question-navigator">
-      {filteredQuestions.map((_, index) => (
+      {filteredQuestions.map((_, index) => ( 
         <button
           key={index}
           className="navigator-button"

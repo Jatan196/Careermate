@@ -35,7 +35,7 @@ const Sidebar = ({ onFilterChange }) => {
       <h1 className="stitle">CareerMate</h1>
       <h3 className="stag">Enlightening Futures, Nurturing Success</h3>
       <br /><br /><br />
-      <h1 className="side">Filter Questions</h1>
+      {/* <h1 className="side">Filter Questions</h1>
     <br />
       <div className="filter-section">
         <label className="filhead">Type:</label>
@@ -59,7 +59,7 @@ const Sidebar = ({ onFilterChange }) => {
           <option value="">All</option>
           {subjects.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
-      </div>
+      </div> */}
     </div>
   );
 };
