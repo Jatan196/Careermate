@@ -48,7 +48,7 @@ export const counsLogin = async (req, res) => {
             { expiresIn: "15m" }
         );
         res.status(200).json({
-            message:"Counsellor Login successful",
+            message: "Counsellor Login successful",
             counsellor: {
                 id: counsellor.id,
                 // name: student.name,
@@ -95,7 +95,7 @@ export const getAllSlots = async (req, res) => {
     const { id } = req.query;
     console.log(id);
 
-    console.log("hi");
+    // console.log("hi");
     try {
         const slots = await pool.query(`SELECT * FROM Timeslot where counsellor_id = ${id}`);
         res.json({
@@ -167,3 +167,28 @@ export const changeReqStatus = async (req, res) => {
         res.status(500).json({ error: 'Database connection failed' });
     }
 }
+
+export const viewRequests = async (req, res) => {
+    const { cId } = req.query;
+    try {
+        const requests = await pool.query(`SELECT student_id,slot_id FROM Request where counsellor_id=$1`, [cId]);
+        console.log(requests);
+        var slots = [];
+        for (let i = 0; i < requests.rows.length; i++) {
+            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`[requests.rows[i]['slot_id']]);
+            slots.push({
+                sId: requests.rows[i]['student_id'],
+                start_time: slotReq.rows[i]['start_time'],
+                end_time: slotReq.rows[i]['end_time']
+            });
+        }
+        res.json({
+            message: "Got all Requests",
+            slots
+        });
+    }
+    catch (err) {
+        console.error('D', err.stack);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+};

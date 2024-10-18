@@ -8,7 +8,7 @@ function CounsLanding() {
   const [startTime, setStartTime] = useState('00:00:00');
   const [endTime, setEndTime] = useState('00:00:00');
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
-  const location = useLocation();
+  // const location = useLocation();
 
   // Open the modal
   const openModal = () => {
@@ -17,7 +17,7 @@ function CounsLanding() {
 
   const navigate = useNavigate();
   const viewRequests = () => {
-    navigate("/Requests", {state: location.state});
+    navigate("/requests");
   }
 
   // Close the modal
@@ -59,7 +59,7 @@ function CounsLanding() {
     const fetchSlots = async () => {
       try {
         const response = await axios.post(`http://localhost:5001/api/v1/counsellor/addNewSlot`, {
-          counsellor_id: location.state,
+          counsellor_id: localStorage.getItem('counsId'),
           start_time: startTime,
           end_time: endTime
         });

@@ -41,7 +41,7 @@ const CounsellorLogin = () => {
             console.log(localStorage.getItem('counsEmail'));
 
             // Redirect to home page after successful login
-            navigate('/counslanding', { state: counsId });
+            navigate('/counslanding');
           }
           if (response.status === 250) {
             console.log("invalid id or password");

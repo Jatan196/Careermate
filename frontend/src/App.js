@@ -18,6 +18,7 @@ import Student_Details_Submission from './components/Student_Details_Submission'
 import CounsellorLogin from './components/CounsellorLogin';
 import StudentLogin from './components/StudentLogin';
 import StudentLanding from './components/StudentLanding';
+import Requests from './components/Requests';
 // import Requests from './components/Requests';
 // function QuizApp() {
 //   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -147,7 +148,7 @@ function App() {
           <Route path="/counsellor" element={<CounsellorList />} />
           <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission/>}/>
           <Route path="/counslanding" element={<CounsLanding />}/>
-          {/* <Route path="/requests" element={<Requests />}/> */}
+          <Route path="/requests" element={<Requests />}/>
           {/* <Route path="/counslanding" element={<CounsLanding />}/> */}
         </Routes>
       </div>
