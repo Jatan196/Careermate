@@ -123,8 +123,8 @@ function QuizWindow() {
 
   return (
     <div className="app-container">
-      <Sidebar onFilterChange={handleFilterChange} />
-      <main className="quiz-main">
+      {/* <Sidebar onFilterChange={handleFilterChange} /> */}
+      <main className="quiz-main"> 
         <Timer handleSubmit={handleSubmit} />
         <QuestionCard currentQuestion={currentQuestion} question={filteredQuestions[currentQuestion]} />
         <div className="quiz-controls">

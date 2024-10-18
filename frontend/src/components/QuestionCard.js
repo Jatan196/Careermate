@@ -11,9 +11,9 @@ const QuestionCard = ({ currentQuestion }) => {
 
   return (
     <div className="question-card">
-      <h2>{question.text}</h2>
+      <h2>{question?.text}</h2>
       <ul className="options">
-        {question.options.map((option, index) => (
+        {question?.options?.map((option, index) => (
           <li key={index}>
             <label>
               <input
