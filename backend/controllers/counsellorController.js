@@ -31,7 +31,7 @@ export const counsLogin = async (req, res) => {
     const { email, password } = req.query;
     console.log(email);
     try {
-        const check = await pool.query(`select id,name,email from counsellor where email = $1 and password = $2`, [email, password]);
+        const check = await pool.query(`select id,name,email,phone,highest_qualification from counsellor where email = $1 and password = $2`, [email, password]);
         console.log(check);
         if (check.rows.length === 0) {
             return res.status(250).json({ message: 'Invalid id or password' });
@@ -43,6 +43,8 @@ export const counsLogin = async (req, res) => {
                 counsId: counsellor.id,
                 counsName: counsellor.name,
                 counsEmail: counsellor.email,
+                counsPhone: counsellor.phone,
+                counsQualification: counsellor.highest_qualification
             },
             process.env.ACCESS_TOKEN_SECRET_COUNSELLOR,
             { expiresIn: "15m" }
@@ -144,20 +146,20 @@ export const addNewSlot = async (req, res) => {
 };
 
 export const changeReqStatus = async (req, res) => {
-    const { stud_id, couns_id, status } = req.body;
+    const { slot_id, couns_id, status } = req.body;
 
     // 1 -> accepted
     // 0 -> denied
 
-    const statusReq = "Accepted";
+    let statusReq = "Accepted";
 
     if (status == 0) statusReq = "Denied";
     try {
         //  const ack= await pool.query(`Update Request set status_of_request=${statusReq}   where student_id=${stud_id} and counsellor_id=${couns_id}`);
         const ack = await pool.query(`UPDATE Request 
              SET status_of_request = $1 
-             WHERE student_id = $2 AND counsellor_id = $3`,
-            [statusReq, stud_id, couns_id]);
+             WHERE slot_id = $2 AND counsellor_id = $3`,
+            [statusReq, slot_id, couns_id]);
         res.json({
             ack
         });
@@ -175,11 +177,15 @@ export const viewRequests = async (req, res) => {
         console.log(requests);
         var slots = [];
         for (let i = 0; i < requests.rows.length; i++) {
-            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`[requests.rows[i]['slot_id']]);
+            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`,[requests.rows[i]['slot_id']]);
+            const stuReq = await pool.query(`select name,email from student where id=$1`,[requests.rows[i]['student_id']]);
             slots.push({
+                slot_id: requests.rows[i]['slot_id'],
                 sId: requests.rows[i]['student_id'],
-                start_time: slotReq.rows[i]['start_time'],
-                end_time: slotReq.rows[i]['end_time']
+                sName: stuReq.rows[0]['name'],
+                sEmail: stuReq.rows[0]['email'],
+                start_time: slotReq.rows[0]['start_time'],
+                end_time: slotReq.rows[0]['end_time']
             });
         }
         res.json({

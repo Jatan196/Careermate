@@ -34,6 +34,8 @@ const CounsellorLogin = () => {
             localStorage.setItem('counsName', counsData.counsName);
             localStorage.setItem('counsEmail', counsData.counsEmail);
             localStorage.setItem('counsId', counsData.counsId);
+            localStorage.setItem('counsPhone',counsData.counsPhone);
+            localStorage.setItem('counsQualification',counsData.counsQualification);
             // localStorage.setItem('mobile', userData.mobile);
             console.log(counsId);
             console.log(localStorage.getItem('counsId'));

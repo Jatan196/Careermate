@@ -154,7 +154,7 @@ export const updateProfile = async () => {
 }
 export const getProfileByUserId = async (req,res) => {
     try {
-        const {id}=req.body;
+        const {id}=req.query;
 
         const basicDetails=await pool.query(`Select * from Student where id=${id}`);
         const predictions=await pool.query(`Select field,interest from predicted_Interest where id=${id}`);
@@ -179,7 +179,6 @@ function stringToInteger(str) {
     for (let i = 0; i < str.length; i++) {
         // Get the ASCII value of the character
         const charValue = str.charCodeAt(i);
-
         // Combine it using the base multiplier to create a unique number
         result = result * base + charValue;
     }

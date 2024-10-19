@@ -2,13 +2,31 @@ import React, { useState } from 'react';
 import './CounsLanding.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+// import logo from 'D:/CareerMate/Careermate/frontend/public/profile_logo.png'; // Update the path based on where your image is located
 
 function CounsLanding() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State to handle the modal open/close
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Counselor details modal
   const [startTime, setStartTime] = useState('00:00:00');
   const [endTime, setEndTime] = useState('00:00:00');
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
   // const location = useLocation();
+
+  const counselorDetails = {
+    name: localStorage.getItem('counsName'),
+    email: localStorage.getItem('counsEmail'),
+    phone: localStorage.getItem('counsPhone'),
+    qualification: localStorage.getItem('counsQualification')
+  };
+
+  const logout = () => {
+    localStorage.removeItem('counsId');
+    localStorage.removeItem('counsName');
+    localStorage.removeItem('counsEmail');
+    localStorage.removeItem('counsPhone');
+    localStorage.removeItem('counsQualification');
+    navigate("/CounsellorLogin");
+  }
 
   // Open the modal
   const openModal = () => {
@@ -25,6 +43,16 @@ function CounsLanding() {
     setIsModalOpen(false);
     setErrorMessage(''); // Clear error message when closing the modal
   };
+
+  const openDetailsModal = () => setIsDetailsModalOpen(true);
+  const closeDetailsModal = () => setIsDetailsModalOpen(false);
+
+  const handleOutsideClick = (e) => {
+    if (e.target.className === 'details-modal-overlay') {
+      closeDetailsModal();
+    }
+  };
+
 
   // Helper function to check if start time is before end time and the difference is at least 30 minutes
   const isValidTimeRange = (start, end) => {
@@ -69,7 +97,7 @@ function CounsLanding() {
       }
     };
     fetchSlots();
-    
+
     // Close the modal after submitting
     closeModal();
   };
@@ -88,6 +116,10 @@ function CounsLanding() {
               <li><button onClick={viewRequests} className="hover:underline">REQUEST</button></li>
             </ul>
           </nav>
+          {/* Logo in the top-right corner */}
+          <div className="logo" onClick={openDetailsModal} style={{ cursor: 'pointer' }}>
+            <img src={`${process.env.PUBLIC_URL}/profile_logo.png`} alt="Counsellor Logo" />
+          </div>
         </div>
       </header>
 
@@ -158,6 +190,47 @@ function CounsLanding() {
               <button type="submit">Submit</button>
               <button type="button" onClick={closeModal}>Close</button>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Counselor Details Modal */}
+      {isDetailsModalOpen && (
+        <div
+          className="details-modal-overlay"
+          onClick={handleOutsideClick}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            zIndex: 999
+          }}
+        >
+          <div
+            className="details-modal"
+            style={{
+              position: 'absolute',
+              top: '60px',
+              right: '10px',
+              backgroundColor: '#fff',
+              padding: '20px',
+              boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+              borderRadius: '8px'
+            }}
+          >
+            <h2>Counselor Details</h2>
+            <p><strong>Name:</strong> {counselorDetails.name}</p>
+            <p><strong>Email:</strong> {counselorDetails.email}</p>
+            <p><strong>Phone:</strong> {counselorDetails.phone}</p>
+            <p><strong>Qualification:</strong> {counselorDetails.qualification}</p>
+            <div className='profButtons'>
+              
+            <button className='editButton' style={{display: 'flex'}}>Edit Profile</button>
+            <button className='logoutButton' onClick={logout} style={{display: 'flex'}}>Logout</button>
+            </div>
           </div>
         </div>
       )}

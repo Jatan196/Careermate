@@ -5,7 +5,7 @@ const BookingPopup = ({ slot, counselor, onClose }) => {
   const handleConfirmBooking = async () => {
     try {
       const response = await axios.post('http://localhost:5001/api/v1/user/registerCouns', {
-        student_id: 1,  // Make sure the 'id' is defined here
+        student_id: localStorage.getItem('stuId'),  // Make sure the 'id' is defined here
         counsellor_id: counselor.id,
         status_of_request: 'Pending',
         slot_id: slot.slot_id

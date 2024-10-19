@@ -1,158 +1,46 @@
-import React, { useState, useContext } from 'react';
-import Sidebar from './components/Sidebar';
-import QuestionCard from './components/QuestionCard';
-import QuestionNavigator from './components/QuestionNavigator';
-import Timer from './components/Timer';
-import { QuizProvider, QuizContext } from './components/QuizContext';
-import './App.css';
-import QuizWindow from './components/QuizWindow';
-import './App.css';
-import CounsellorList from './components/CounsellorList';
-import {RouterProvider, createBrowserRouter } from 'react-router-dom';
-import Landing from './components/Landing';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import VerticalNavBar from './components/verticalNavBar';
+import Landing from './components/Landing';
+import QuizProviderComponent from './components/quiz/quizProvider';
+import QuizWindow from './components/quiz/quizWindow';
+import CounsellorList from './components/CounsellorList';
 import CounsLanding from './components/CounsLanding';
-import Counsellor_Details_Submission from './components/Counsellor_Details_Submission'; 
+import Counsellor_Details_Submission from './components/Counsellor_Details_Submission';
 import Student_Details_Submission from './components/Student_Details_Submission';
 import CounsellorLogin from './components/CounsellorLogin';
 import StudentLogin from './components/StudentLogin';
 import StudentLanding from './components/StudentLanding';
+import './App.css';
 import Requests from './components/Requests';
-// import Requests from './components/Requests';
-// function QuizApp() {
-//   const [currentQuestion, setCurrentQuestion] = useState(0);
-//   const { questions, selectedAnswers } = useContext(QuizContext);
-//   const [isSubmitted, setIsSubmitted] = useState(false);
-//   const [score, setScore] = useState(0);
-//   const [filteredQuestions, setFilteredQuestions] = useState(questions); // For storing filtered questions
-
-//   const handleNext = () => setCurrentQuestion((prev) => Math.min(prev + 1, questions.length - 1));
-//   const handlePrevious = () => setCurrentQuestion((prev) => Math.max(prev - 1, 0));
-
-//   const handleSubmit = () => {
-//     let totalScore = 0;
-    
-    
-//     // Calculate score
-//     questions.forEach((question, index) => {
-//       if (selectedAnswers[index] === question.correctAnswer) {
-//         totalScore += 1;
-//       }
-//     });
-//     setScore(totalScore);
-//     setIsSubmitted(true);
-//   };
-
-//   // Handle filter change
-//   const handleFilterChange = (filters) => {
-//     let filtered = questions;
-//     console.log("me called!",filters)
-
-//     // Apply type filter
-//     if (filters.type) {
-//       filtered = filtered.filter(q => q.type === filters.type);
-//     }
-
-//     // Apply difficulty filter
-//     if (filters.difficulty) {
-//       filtered = filtered.filter(q => q.difficulty === filters.difficulty);
-//     }
-
-//     // Apply subject filter
-//     if (filters.subject) {
-//       filtered = filtered.filter(q => q.subject === filters.subject);
-//     }
-//     console.log(filtered)
-//     setFilteredQuestions(filtered);
-//     setCurrentQuestion(0); // Reset to the first question of filtered result
-//     // QuizContext.forceUpdate();
-//   };
-
-//   if (isSubmitted) {
-//     return (
-//       <div className="app-container">
-//         <Sidebar />
-//         <main className="quiz-main" align="center">
-//           <br></br>
-//           <h1><b>Quiz Submitted!</b></h1>
-//           <br></br><br></br><br></br>
-//           <p>Your Score: <b>{score}</b> out of <b>{questions.length}</b></p>
-//           <p>You answered <b>{selectedAnswers.filter(Boolean).length}</b> out of <b>{questions.length}</b> questions.</p>
-
-//         </main>
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="app-container">
-//       <Sidebar onFilterChange={handleFilterChange}/>
-//       <main className="quiz-main">
-//         <Timer handleSubmit={handleSubmit}/>
-//         <QuestionCard currentQuestion={currentQuestion} question={filteredQuestions[currentQuestion]}/>
-//         <div className="quiz-controls">
-//           <button onClick={handlePrevious}>Previous</button>
-//           <button onClick={handleNext}>Next</button>
-//         </div>
-//         <div className="submit-button"><button className="submit" onClick={handleSubmit}>Submit Quiz</button></div>
-//         <QuestionNavigator setCurrentQuestion={setCurrentQuestion} questions={filteredQuestions} />
-//       </main>
-//     </div>
-//   );
-// }
-
-// const router=createBrowserRouter([
-  
-//   {
-//     path:"/counsellor",
-//     element:<CounsellorList/>
-//   },
-//   {
-//     path:"/",
-//     element:<Landing/>
-//   },
-//   {
-//     path:"/quizWindow",
-//     element:<QuizWindow/>
-//   }
-// ])
-
-// function App() {
-//   return (
-//     <>
-//     {/* <QuizProvider>
-//       <QuizWindow/>
-//     </QuizProvider> */}
-//     <RouterProvider router={router}/>
-//     </>
-//   );
-// }
 
 function App() {
+  
   return (
-    <Router>
-      <div>
-        <VerticalNavBar />
-        <Routes>
-          {/* Route for Home page */}
-          <Route path="/Home" element={<Landing />}/>
-          <Route path="/" element={<QuizProvider><QuizWindow /></QuizProvider>} />
+    <div className="flex h-screen">
+      {/* Sidebar on the left */}
+      <div className="flex-shrink-0 text-white">
+      <VerticalNavBar />
+      </div> 
 
-          {/* Route for About page */}
-
-          <Route path="/Student_Details_Submission" element={<Student_Details_Submission/>}/>
-          <Route path="/StudentLogin" element={<StudentLogin/>}/>
-          <Route path="/StudentLanding" element={<StudentLanding/>}/>
-          <Route path="/CounsellorLogin" element={<CounsellorLogin/>}/>
-          <Route path="/counsellor" element={<CounsellorList />} />
-          <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission/>}/>
-          <Route path="/counslanding" element={<CounsLanding />}/>
-          <Route path="/requests" element={<Requests />}/>
-          {/* <Route path="/counslanding" element={<CounsLanding />}/> */}
-        </Routes>
+      {/* Main content on the right */}
+      <div className="flex-grow bg-gray-100 p-6 overflow-auto ml-60">
+        <Router>
+          <Routes>
+            <Route path="/Home" element={<Landing />} />
+            <Route path="/" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
+            <Route path="/Student_Details_Submission" element={<Student_Details_Submission />} />
+            <Route path="/StudentLogin" element={<StudentLogin />} />
+            <Route path="/StudentLanding" element={<StudentLanding />} />
+            <Route path="/CounsellorLogin" element={<CounsellorLogin />} />
+            <Route path="/counsellor" element={<CounsellorList />} />
+            <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission />} />
+            <Route path="/counslanding" element={<CounsLanding />} />
+            <Route path='/Requests' element={<Requests />} />
+          </Routes>
+        </Router>
       </div>
-    </Router>
+    </div>
   );
 }
 

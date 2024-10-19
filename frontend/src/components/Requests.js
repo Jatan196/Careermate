@@ -13,23 +13,39 @@ const Requests = () => {
 
     ]);
 
-    const fetchRequests = async () => {
+    useEffect(() => {
+        const fetchRequests = async () => {
+            try {
+                console.log(localStorage.getItem('counsId'));
+                const a = localStorage.getItem('counsId');
+                const response = await axios(`http://localhost:5001/api/v1/counsellor/viewRequests`, {
+                    params: {
+                        cId: a
+                    }
+                });
+                console.log(response);
+                setRequests(response.data.slots);
+            } catch (error) {
+                console.error('Error fetching slots:', error);
+            }
+        };
+
+        fetchRequests(); // Call the function inside useEffect
+    }, []);
+
+    const changeStatus = async (slot_id, status) => {
         try {
-            console.log(localStorage.getItem('counsId'));
-            const response = await axios(`http://localhost:5001/api/v1/counsellor/viewRequests`, {
-                params: {
-                    cId: localStorage.getItem('counsId'),
-                }
+            const response = await axios.post('http://localhost:5001/api/v1/counsellor/changeReqStatus', {
+              slot_id: slot_id,
+              status: status,
+              couns_id: localStorage.getItem('counsId')
             });
-            console.log(response);
-            
-            //   const result = await response.data.slots.rows;
-            //   setSlots(result); // Assuming your query result is in rows
-        } catch (error) {
-            console.error('Error fetching slots:', error);
-        }
+      
+            console.log(response);  // Handle the API response       // Return or set the data as needed
+          } catch (error) {
+            console.error('Error Changing Status:', error);
+          }
     };
-    fetchRequests();
 
     console.log('Requests:', requests);
 
@@ -38,14 +54,16 @@ const Requests = () => {
             {requests.map((request, index) => (
                 <div key={index} className="request-list">
                     <h2 className="Request-heading">Counselling Request {index + 1}</h2>
-                    <p><strong>Student Name:</strong> {request.name}</p>
-                    <p><strong>Email:</strong> {request.email}</p>
-                    <p><strong>Slot:</strong> {request.slot}</p>
+                    <p><strong>Student Name : </strong> {request.sName}</p>
+                    <p><strong>Email : </strong> {request.sEmail}</p>
+                    <br />
+                    <p><strong>Start Time : </strong> {request.start_time}</p>
+                    <p><strong>End Time : </strong> {request.end_time}</p>
                     <div className="select-btn">
-                        <button className="cancel-btn">
-                            Denied
+                        <button className="cancel-btn" onClick={() => changeStatus(request.slot_id, 0)}>
+                            Deny
                         </button>
-                        <button className="conform-btn" >
+                        <button className="conform-btn" onClick={() => changeStatus(request.slot_id, 1)}>
                             Accept
                         </button>
                     </div>

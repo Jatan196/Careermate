@@ -13,7 +13,7 @@ export default function Printing(props) {
               },
             ]}
             layout={{
-              title: 'Quiz Report',
+              // title: 'Quiz Report',
               xaxis: { title: 'Subject' },
               yaxis: { title: 'Percentage' },
             }}

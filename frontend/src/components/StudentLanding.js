@@ -1,11 +1,59 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';  // <-- Import useNavigate
 import './StudentLanding.css';
 import { useLocation } from 'react-router-dom';
+import Printing from './Report';
+import axios from 'axios';
 
 const StudentLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // State for counselor details modal
   const navigate = useNavigate();  // <-- Initialize navigate
+  const [p1,setP1] = useState([]);
+  const [p2,setP2] = useState([]);
+
+  const [studentDetails,setStudentDetails] = useState(
+    // name: "John Doe",
+    // email: "johndoe@example.com",
+    // phone: "1234567890",
+  );
+
+  useEffect(() => {
+    const getDetails = async () => {
+      // console.log(counselor.id);
+      try {
+        const response = await axios(`http://localhost:5001/api/v1/user/getProfileById`, {
+          params: {
+            id: localStorage.getItem('stuId'),
+          }
+        });
+        console.log(response);
+        setStudentDetails(response.data.basicDetails.rows[0]);
+        let pp1 = [];
+        let pp2 = [];
+        for(let i=0; i<response.data.predictions.rows.length; i++) {
+          pp1.push(response.data.predictions.rows[i]['field']);
+          pp2.push(response.data.predictions.rows[i]['interest']);
+        }
+
+        setP1(pp1);
+        setP2(pp2);
+
+        // const result = await response.data.slots.rows;
+        // setSlots(result); // Assuming your query result is in rows
+      } catch (error) {
+        console.error('Error fetching slots:', error);
+      }
+    };
+    getDetails();
+  }, []);
+
+  const logout = () => {
+    localStorage.removeItem('stuId');
+    localStorage.removeItem('stuName');
+    localStorage.removeItem('stuEmail');
+    navigate("/StudentLogin");
+  }
 
   // Function to open the modal
   const openModal = () => {
@@ -19,10 +67,25 @@ const StudentLanding = () => {
     setIsModalOpen(false);
   };
 
+  const openDetailsModal = () => {
+    setIsDetailsModalOpen(true);
+  };
+
+  // Function to close the counselor details modal
+  const closeDetailsModal = () => {
+    setIsDetailsModalOpen(false);
+  };
+
   // Function to start the quiz and navigate to the quiz page
   const startQuiz = () => {
     setIsModalOpen(false);  // Close the modal
     navigate('/');  // Navigate to the quiz page
+  };
+
+  const handleOutsideClick = (e) => {
+    if (e.target.className === 'details-modal-overlay') {
+      closeDetailsModal();
+    }
   };
 
   return (
@@ -39,7 +102,10 @@ const StudentLanding = () => {
             <li><a href="/resources">Resource</a></li>
           </ul>
         </nav>
-        <div className="user-icon">CM</div> {/* Placeholder for user profile icon */}
+        {/* <div className="user-icon">CM</div> Placeholder for user profile icon */}
+        <div className="logo" onClick={openDetailsModal} style={{ cursor: 'pointer',width: '50px', height: '50px' }}>
+            <img src={`${process.env.PUBLIC_URL}/profile_logo.png`} alt="Counsellor Logo" />
+          </div>
       </header>
 
       {/* Hero Section */}
@@ -90,6 +156,56 @@ const StudentLanding = () => {
             <p>Are you ready to begin your career quiz?</p>
             <button onClick={closeModal} className="close-modal-btn">Cancel</button>
             <button onClick={startQuiz} className="start-quiz-btn">Start Quiz</button> {/* Call startQuiz */}
+          </div>
+        </div>
+      )}
+
+{isDetailsModalOpen && (
+        <div
+          className="details-modal-overlay"
+          onClick={handleOutsideClick}
+          // style={{
+          //   display: 'flex',
+          //   justifyContent: 'center',
+          //   alignItems: 'center',
+          //   position: 'fixed',
+          //   top: 0,
+          //   left: 0,
+          //   width: '100%',
+          //   height: '100%',
+          //   backgroundColor: 'rgba(0, 0, 0, 0.3)',
+          //   zIndex: 999,
+          // }}
+        >
+          <div
+            className="modal-content"
+            // style={{
+            //   // display: 'flex',
+            //   // justifySelf: 'center',
+            //   position: 'absolute',
+            //   top: '60px',
+            //   right: '10px',
+            //   backgroundColor: '#fff',
+            //   padding: '20px',
+            //   boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            //   borderRadius: '8px',
+            //   textAlign: 'center'
+            // }}
+          >
+            <h2><b>Student Details</b></h2>
+            <p><strong>Name:</strong> {studentDetails.name}</p>
+            <p><strong>Email:</strong> {studentDetails.email}</p>
+            <p><strong>Phone:</strong> {studentDetails.phone}</p>
+            {/* <div className='stuProf'> */}
+            <br /><br />
+            <p><strong>ML Based Interest Analysis</strong> </p>
+            <Printing p1={p1} p2={p2}/>
+
+            <div className='stuprofButtons'>
+              
+            <button className='stueditButton'  style={{display: 'flex'}}>Edit Profile</button>
+            <button className='stulogoutButton' onClick={logout} style={{display: 'flex'}}>Logout</button>
+            </div>
           </div>
         </div>
       )}
