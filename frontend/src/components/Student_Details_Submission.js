@@ -61,7 +61,7 @@ function Student_Details_Submission() {
     } catch (error) {
       console.error('Error registering :', error);
     }
-    navigate("/Home");
+    navigate("/StudentLogin");
 
 
 

@@ -270,7 +270,7 @@ export const makeQuizOption = async (req, res) => {
                 };
 
                 const totalQuestionsQuery = `
-                    SELECT difficulty, COUNT(*) as count 
+                    SELECT difficulty, COUNT(*)/5 as count 
                     FROM Question 
                     WHERE subject = '${subject}'
                     GROUP BY difficulty;
@@ -347,7 +347,8 @@ const fetchQuestionsWithOptions = async (questions, questionIds) => {
     return questions.map(question => ({
         ...question,
         options: optionsByQuestion[question.id] || [],
-        correctAnswer: (optionsByQuestion[question.id] || []).filter(opt => opt.answer).map(opt => opt.option)
+        correctAnswer: (optionsByQuestion[question.id] || []).filter(opt => opt.answer).map(opt => opt.option),
+        answer: ''
     }));
 };
 

@@ -33,7 +33,7 @@ const StudentLanding = () => {
         let pp2 = [];
         for(let i=0; i<response.data.predictions.rows.length; i++) {
           pp1.push(response.data.predictions.rows[i]['field']);
-          pp2.push(response.data.predictions.rows[i]['interest']);
+          pp2.push(response.data.predictions.rows[i]['interest']*100);
         }
 
         setP1(pp1);
@@ -79,7 +79,7 @@ const StudentLanding = () => {
   // Function to start the quiz and navigate to the quiz page
   const startQuiz = () => {
     setIsModalOpen(false);  // Close the modal
-    navigate('/');  // Navigate to the quiz page
+    navigate('/QuizWindow');  // Navigate to the quiz page
   };
 
   const handleOutsideClick = (e) => {
@@ -151,7 +151,7 @@ const StudentLanding = () => {
       {/* Popup Modal for Quiz */}
       {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="stu-modal-content">
             <h2>Start Your Quiz</h2>
             <p>Are you ready to begin your career quiz?</p>
             <button onClick={closeModal} className="close-modal-btn">Cancel</button>
@@ -178,7 +178,7 @@ const StudentLanding = () => {
           // }}
         >
           <div
-            className="modal-content"
+            className="stu-modal-content"
             // style={{
             //   // display: 'flex',
             //   // justifySelf: 'center',
@@ -198,8 +198,7 @@ const StudentLanding = () => {
             <p><strong>Phone:</strong> {studentDetails.phone}</p>
             {/* <div className='stuProf'> */}
             <br /><br />
-            <p><strong>ML Based Interest Analysis</strong> </p>
-            <Printing p1={p1} p2={p2}/>
+            <Printing p1={p1} p2={p2} title="ML Based Interest Analysis"/>
 
             <div className='stuprofButtons'>
               

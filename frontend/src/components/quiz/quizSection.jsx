@@ -10,15 +10,15 @@ const QuizSection = ({ field }) => {
           <h3 className='bg-red-500 text-white w-15 rounded-lg p-2'>{subject.subject}</h3> 
           {/* <h4>Easy Questions</h4> */}
           {subject?.easy?.map((question) => (
-            <QuestionCard key={question.id} question={question} />
+            <QuestionCard key={question.id} question={question} field={field.field} subject={subject.subject} difficulty='easy'/>
           ))}
           {/* <h4>Medium Questions</h4> */}
           {subject?.medium?.map((question) => (
-            <QuestionCard key={question.id} question={question} />
+            <QuestionCard key={question.id} question={question} field={field.field} subject={subject.subject} difficulty='medium'/>
           ))}
           {/* <h4>Hard Questions</h4> */}
           {subject?.hard?.map((question) => (
-            <QuestionCard key={question.id} question={question} />
+            <QuestionCard key={question.id} question={question} field={field.field} subject={subject.subject} difficulty='hard'/>
           ))} 
         </div>
       ))}

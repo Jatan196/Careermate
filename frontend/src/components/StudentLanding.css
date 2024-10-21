@@ -139,7 +139,7 @@
 }
 
 /* Modal Content */
-.modal-content {
+.stu-modal-content {
   background-color: white;
   padding: 30px;
   border-radius: 8px;
@@ -147,7 +147,16 @@
   max-width: 80%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
+  /* gap: 10px; */
   /* justify-content: space-between; */
+}
+
+.stu-modal-content h2 {
+  margin-bottom: 20px;
+}
+
+.stu-modal-content p {
+  margin-bottom: 20px;
 }
 
 .details-modal-overlay {

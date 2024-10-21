@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useQuiz } from './quizContext';
+// import { connect } from 'react-redux';
 
-const QuestionCard = ({ question }) => {
+const QuestionCard = ({ question, field, subject, difficulty }) => {
   const { setAnswer } = useQuiz();
   const [selectedOption, setSelectedOption] = useState('');
   const [textAnswer, setTextAnswer] = useState('');
@@ -11,26 +12,27 @@ const QuestionCard = ({ question }) => {
   const handleOptionChange = (e) => {
     const answer = e.target.value;
     setSelectedOption(answer);
-    setAnswer(question.id, answer); // Save the selected answer in the context
+    setAnswer(question.id, answer, field, subject, difficulty); // Save the selected answer in the context
   };
   const handleConfirm = () => {
-    setAnswer(question.id, selectedOption || textAnswer);
-    alert('Answer confirmed!');
+    setAnswer(question.id, selectedOption || textAnswer, field, subject, difficulty);
+    // alert('Answer confirmed!');
+    console.log(selectedOption);
   };
 
   // Clear button handler
   const handleClear = () => {
     setSelectedOption('');
     setTextAnswer('');
-    setAnswer(question.id, ''); // Clear the answer in the context
+    setAnswer(question.id, '', field, subject, difficulty); // Clear the answer in the context
   };
   // Handle text input change
   const handleTextChange = (e) => {
     const answer = e.target.value;
     setTextAnswer(answer);
-    setAnswer(question.id, answer); // Save the typed answer in the context
+    setAnswer(question.id, answer, field, subject, difficulty); // Save the typed answer in the context
   };
-  console.log(question?.options?.length);
+  // console.log(question?.options?.length);
   return (
     <div className="p-4 bg-white shadow-md rounded-md">
       <h2 className="text-xl font-semibold mb-4">Question:</h2>

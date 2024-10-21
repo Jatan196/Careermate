@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuiz } from './quizContext.jsx';
 import QuizSection from './quizSection.jsx';
+import { useNavigate } from 'react-router-dom';
 // import QuizFilters from './quizFilters.jsx';
 
 const QuizWindow = () => {
-  const { state } = useQuiz();
+  const navigate = useNavigate();
+  const { state, handleSubmit } = useQuiz();
+  const submit = async () => {
+    const report = await handleSubmit();
+    console.log(report);
 
+    navigate("/QuizReport", {state: {result_field: report.result_field, result_interest: report.result_interest, pred_field: report.pred_field, pred_interest: report.pred_interest}});
+    
+    // console.log(resp.pred_field);
+    // console.log(resp.pred_interest);
+    // console.log(resp.result_field);
+    // console.log(resp.result_interest);
+  }
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       {/* Quiz Window Title */}
@@ -25,6 +37,8 @@ const QuizWindow = () => {
           <QuizSection field={field} />
         </div>
       ))}
+
+      <button onClick={submit}>Submit</button>
     </div>
   );
 };

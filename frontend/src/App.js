@@ -13,6 +13,9 @@ import StudentLogin from './components/StudentLogin';
 import StudentLanding from './components/StudentLanding';
 import './App.css';
 import Requests from './components/Requests';
+import Printing from './components/Report';
+import QuizReport from './components/quiz/quizReport';
+import { QuizProvider } from './components/quiz/quizContext';
 
 function App() {
   
@@ -27,8 +30,8 @@ function App() {
       <div className="flex-grow bg-gray-100 p-6 overflow-auto ml-60">
         <Router>
           <Routes>
-            <Route path="/Home" element={<Landing />} />
-            <Route path="/" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
+            <Route path="/" element={<Landing />} />
+            {/* <Route path="/" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} /> */}
             <Route path="/Student_Details_Submission" element={<Student_Details_Submission />} />
             <Route path="/StudentLogin" element={<StudentLogin />} />
             <Route path="/StudentLanding" element={<StudentLanding />} />
@@ -37,6 +40,10 @@ function App() {
             <Route path="/Counsellor_Details_Submission" element={<Counsellor_Details_Submission />} />
             <Route path="/counslanding" element={<CounsLanding />} />
             <Route path='/Requests' element={<Requests />} />
+            <Route path='/Printing' element={<Printing />} />
+            <Route path="/QuizReport" element={<QuizReport />} />
+            <Route path="/QuizWindow" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
+            {/* <Route path='/QuizProvider' element={<QuizProvider />} /> */}
           </Routes>
         </Router>
       </div>
