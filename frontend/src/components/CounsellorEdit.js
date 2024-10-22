@@ -3,12 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Counsellor_Details_Submission.css'; 
 import axios from 'axios';
 
-function Counsellor_Details_Submission() {
+function CounsellorEdit() {
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
-    email: '',
-    password: '',
     highest_qualification: '',
     domains: [''],
     experience: 0
@@ -37,30 +35,29 @@ function Counsellor_Details_Submission() {
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { name, phone, email, password, highest_qualification, domains } = formData;
+    const { name, phone, highest_qualification, domains, experience } = formData;
     console.log(formData);
 
     // Basic validation
-    if (!name || !phone || !email || !password || !highest_qualification) {
+    if (!name || !phone || !highest_qualification || !experience) {
       setError('Please fill all required fields');
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:5001/api/v1/counsellor/counsellorReg', {
+      const response = await axios.post('http://localhost:5001/api/v1/counsellor/counsEdit', {
+        id: localStorage.getItem('counsId'),
         name: formData.name,  // Make sure the 'id' is defined here
-        email: formData.email,
         phone: formData.phone,
-        password: formData.password,
         highest_qualification: formData.highest_qualification,
         domains: formData.domains,
         experience: formData.experience
       });
 
       console.log(response);  // Handle the API response       // Return or set the data as needed
-      navigate("/CounsellorLogin");
+      navigate("/counslanding");
     } catch (error) {
-      console.error('Error registering session:', error);
+      console.error('Error Updating Details:', error);
     }
 
     // try {
@@ -133,28 +130,6 @@ function Counsellor_Details_Submission() {
           </div>
 
           <div className="form-group">
-            <label>Email ID :- </label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Password :- </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-          </div>
-
-          <div className="form-group">
             <label>Highest Qualification :- </label>
             <input
               type="text"
@@ -203,4 +178,4 @@ function Counsellor_Details_Submission() {
   );
 }
 
-export default Counsellor_Details_Submission;
+export default CounsellorEdit;

@@ -16,6 +16,8 @@ import Requests from './components/Requests';
 import Printing from './components/Report';
 import QuizReport from './components/quiz/quizReport';
 import { QuizProvider } from './components/quiz/quizContext';
+import StudentEdit from './components/StudentEdit';
+import CounsellorEdit from './components/CounsellorEdit';
 
 function App() {
   
@@ -42,7 +44,10 @@ function App() {
             <Route path='/Requests' element={<Requests />} />
             <Route path='/Printing' element={<Printing />} />
             <Route path="/QuizReport" element={<QuizReport />} />
+            <Route path="/StudentEdit" element={<StudentEdit />} />
+            <Route path="/CounsellorEdit" element={<CounsellorEdit />} />
             <Route path="/QuizWindow" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
+
             {/* <Route path='/QuizProvider' element={<QuizProvider />} /> */}
           </Routes>
         </Router>

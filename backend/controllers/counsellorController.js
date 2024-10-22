@@ -9,20 +9,40 @@ import pg from "pg";
 import pool from "../config/localdb.js";
 
 export const counsellorReg = async (req, res) => {
-    const { domains, name, phone, email, password, highest_qualification } = req.body;
+    const { domains, name, phone, email, password, highest_qualification, experience } = req.body;
 
     try {
         const reg = await pool.query(
-            'INSERT INTO Counsellor (name,phone,email,password,highest_qualification) VALUES($1,$2,$3,$4,$5) returning id', [name, phone, email, password, highest_qualification]
+            'INSERT INTO Counsellor (name,phone,email,password,highest_qualification,experience) VALUES($1,$2,$3,$4,$5,$6) returning id', [name, phone, email, password, highest_qualification, experience]
         );
         console.log(reg);
-        res.status(201).json({ message: "Counsellor register successfully", couns_id: reg.rows[0]['id'] });
+        res.status(201).json({ message: "Counsellor registered successfully", couns_id: reg.rows[0]['id'] });
         for (let i = 0; i < domains.length; i++) {
             await pool.query('insert into domains (id, domain) values($1,$2)', [reg.rows[0]['id'], domains[i]]);
         }
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Registration failed" });
+    }
+
+}
+
+export const counsEdit = async (req, res) => {
+    const { id, domains, name, phone, highest_qualification, experience } = req.body;
+
+    try {
+        const reg = await pool.query(
+            'UPDATE Counsellor set (name,phone,highest_qualification,experience) = ($1,$2,$3,$5) where id=$4', [name, phone, highest_qualification, id, experience]
+        );
+        console.log(reg);
+        await pool.query('delete from domains where id=$1', [id]);
+        for (let i = 0; i < domains.length; i++) {
+            await pool.query('insert into domains (id, domain) values($1,$2)', [id, domains[i]]);
+        }
+        res.status(201).json({ message: "Counsellor updated successfully", couns_id: id });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Updation failed" });
     }
 
 }

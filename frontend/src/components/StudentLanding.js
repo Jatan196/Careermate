@@ -88,6 +88,10 @@ const StudentLanding = () => {
     }
   };
 
+  const editProfile = () => {
+    navigate('/StudentEdit');
+  };
+
   return (
     <div className="student-landing">
       {/* Header Section */}
@@ -202,7 +206,7 @@ const StudentLanding = () => {
 
             <div className='stuprofButtons'>
               
-            <button className='stueditButton'  style={{display: 'flex'}}>Edit Profile</button>
+            <button className='stueditButton' onClick={editProfile} style={{display: 'flex'}}>Edit Profile</button>
             <button className='stulogoutButton' onClick={logout} style={{display: 'flex'}}>Logout</button>
             </div>
           </div>

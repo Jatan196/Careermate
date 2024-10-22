@@ -28,6 +28,10 @@ function CounsLanding() {
     navigate("/CounsellorLogin");
   }
 
+  const editProfile = () => {
+    navigate("/CounsellorEdit");
+  };
+
   // Open the modal
   const openModal = () => {
     setIsModalOpen(true);
@@ -228,7 +232,7 @@ function CounsLanding() {
             <p><strong>Qualification:</strong> {counselorDetails.qualification}</p>
             <div className='profButtons'>
               
-            <button className='editButton' style={{display: 'flex'}}>Edit Profile</button>
+            <button className='editButton' onClick={editProfile} style={{display: 'flex'}}>Edit Profile</button>
             <button className='logoutButton' onClick={logout} style={{display: 'flex'}}>Logout</button>
             </div>
           </div>

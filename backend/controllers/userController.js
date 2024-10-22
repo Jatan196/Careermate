@@ -149,6 +149,92 @@ export const addNewProfile = async ({acad,studentId}) => {
     });
 };
 
+export const studEdit = async (req, res) => {
+    try {
+        // Get data from the request body 
+        const { id, acad, namee, phone, hobbies,edu_achieve,extra_achieve } = req.body; //, name, phone, email, password, hobbies, edu_achieve, interest 
+
+        // Step 1: Insert student data into the Student table
+        
+        const insertStudentQuery = `
+                UPDATE Student set ( name, phone, hobbies ,edu_achieve, extra_achieve)
+                = ($1, $2, $3, $4, $5) where id=$6`;
+        const values = [namee, phone, hobbies, edu_achieve,extra_achieve, id];
+
+        // Add basic details
+        const result = await pool.query(insertStudentQuery, values);
+        console.log(result);
+        // TOKEN // SESSION CREATION
+
+        // add 10th marks in table
+        
+            
+        console.log(acad);
+        console.log("hello",id);
+
+        // Trigger ML- model
+        await stuEditProfile({acad: acad,studentId: id});  //studentId, name, edu_achieve, interest);
+
+        // Step 3: Send success response
+        res.status(201).json({ message: 'Student profile updated successfully!' , stu_id: id}); //, studentId
+
+    } catch (error) {
+        console.error('Error updating student:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+export const stuEditProfile = async ({acad,studentId}) => {
+    console.log("inside",studentId,acad);
+    return new Promise((resolve, reject) => {
+        // Step 1: Trigger the Python ML Model using spawn
+        const x = acad.selfStdyHrs,
+            y = acad.extraCuri,
+            w = acad.mathScore,
+            z = acad.langScore,
+            p = acad.scienceScore,
+            q = acad.englishScore,
+            r = acad.sstScore;
+        const pythonProcess = spawn('python', ['./mlmodel/Model.py', x, y, w, z, p, q, r]);
+
+        pythonProcess.stdout.on('data', async (data) => {
+            // Parse the data returned by the ML model 
+            const mlResult = JSON.parse(data.toString());
+            const  interestFields  =[
+                { "fieldName":"Arts","interestScore": mlResult.Arts},
+                { "fieldName":"Commerce","interestScore": mlResult.Commerce},
+                { "fieldName":"PCB","interestScore": mlResult.PCB},
+                { "fieldName":"PCM","interestScore": mlResult.PCM},
+                { "fieldName":"Others","interestScore": mlResult.Others}
+            ];
+            console.log("hello",studentId);
+            console.log(mlResult, interestFields);
+
+            // Add predicited interest in table
+
+            console.log(await pool.query(`update predicted_interest set interest=$2 where (id,field)=($1,'PCB') returning id`,[studentId,mlResult.PCB]));
+        
+            const insertInterestQuery = `
+                UPDATE predicted_Interest set interest
+                = $3 where (id,field) = ($1,$2)`; 
+                
+            for (let i=0; i<interestFields.length; i++){ 
+                console.log(interestFields[i]);
+                const interestValues = [studentId, interestFields[i].fieldName, interestFields[i].interestScore];
+                await pool.query(insertInterestQuery, interestValues);
+            }
+            // console.log(await pool.query(`select * from predicted_interest where id=$1`, [studentId]));
+            // console.log('ML data inserted into Interest table');
+            resolve();
+        });
+
+        // Handle any errors from the Python process
+        pythonProcess.stderr.on('data', (data) => {
+            console.error('Error from ML model:', data.toString());
+            reject(new Error('Error from ML model'));
+        });
+    });
+};
+
 export const updateProfile = async () => {
     // similar
 }
@@ -171,6 +257,8 @@ export const getProfileByUserId = async (req,res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 }
+
+
 
 function stringToInteger(str) {
     let result = 0;
