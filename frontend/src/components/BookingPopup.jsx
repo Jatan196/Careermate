@@ -23,6 +23,7 @@ const BookingPopup = ({ slot, counselor, onClose }) => {
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold mb-4">Confirm Booking</h2>
         <p><strong>Counselor:</strong> {counselor.name}</p>
+        <p><strong>Date:</strong> {slot.day}</p>
         <p><strong>Start-Time:</strong> {slot.start_time}</p>
         <p><strong>End-Time:</strong> {slot.end_time}</p>
         <div className="mt-6 flex justify-between">

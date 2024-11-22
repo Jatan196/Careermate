@@ -103,7 +103,7 @@ const StudentLanding = () => {
             <li><button onClick={openModal} className="quiz-button">Quiz</button></li>
             <li><a href="/report">Report</a></li>
             <li><a href="/counsellor">Counselling</a></li>
-            <li><a href="/resources">Resource</a></li>
+            <li><a href="/Resource">Resource</a></li>
           </ul>
         </nav>
         {/* <div className="user-icon">CM</div> Placeholder for user profile icon */}

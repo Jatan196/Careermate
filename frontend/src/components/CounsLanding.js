@@ -9,6 +9,7 @@ function CounsLanding() {
   const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false); // Counselor details modal
   const [startTime, setStartTime] = useState('00:00:00');
   const [endTime, setEndTime] = useState('00:00:00');
+  const [days, setDays] = useState(new Set());
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
   // const location = useLocation();
 
@@ -57,6 +58,18 @@ function CounsLanding() {
     }
   };
 
+  const addDay = (day) => {
+    setDays((prevSet) => new Set([...prevSet, day]));
+  }
+
+  const removeDay = (day) => {
+    setDays((prevSet) => {
+      const newSet = new Set(prevSet);
+      newSet.delete(day);
+      return newSet;
+    })
+  }
+
 
   // Helper function to check if start time is before end time and the difference is at least 30 minutes
   const isValidTimeRange = (start, end) => {
@@ -74,6 +87,10 @@ function CounsLanding() {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (days.size===0) {
+      setErrorMessage('Please select atleast one day of week');
+      return;
+    }
 
     // Validate time range
     if (!isValidTimeRange(startTime, endTime)) {
@@ -84,23 +101,27 @@ function CounsLanding() {
     // Process the submitted start and end times (e.g., send to backend)
     console.log("Start Time:", startTime);
     console.log("End Time:", endTime);
+    console.log("Days:", days);
 
     // Clear error message
     setErrorMessage('');
 
-    const fetchSlots = async () => {
+    const addSlots = async () => {
       try {
+        const arrDays = [...days];
         const response = await axios.post(`http://localhost:5001/api/v1/counsellor/addNewSlot`, {
           counsellor_id: localStorage.getItem('counsId'),
           start_time: startTime,
-          end_time: endTime
+          end_time: endTime,
+          days: arrDays
         });
         console.log(response);
       } catch (error) {
         console.error('Error adding slots:', error);
       }
     };
-    fetchSlots();
+    addSlots();
+    setDays(new Set())
 
     // Close the modal after submitting
     closeModal();
@@ -117,7 +138,7 @@ function CounsLanding() {
               <li>
                 <button className="hover:underline" onClick={openModal}>ADD SLOT</button>
               </li>
-              <li><button onClick={viewRequests} className="hover:underline">REQUEST</button></li>
+              <li><button onClick={viewRequests} className="hover:underline">REQUESTS</button></li>
             </ul>
           </nav>
           {/* Logo in the top-right corner */}
@@ -186,6 +207,84 @@ function CounsLanding() {
                   onChange={(e) => setEndTime(e.target.value)}
                   required
                 />
+              </div>
+
+              <div>
+                <label style={{display: 'inline-flex', alignSelf: 'start'}}>
+                  <input 
+                  type="checkbox"
+                  value="Monday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(1): removeDay(1)}}
+                  />
+                  Monday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Tuesday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(2): removeDay(2)}}
+                  />
+                  Tuesday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Wednesday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(3): removeDay(3)}}
+                  />
+                  Wednesday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Thursday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(4): removeDay(4)}}
+                  />
+                  Thursday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Friday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(5): removeDay(5)}}
+                  />
+                  Friday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Saturday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(6): removeDay(6)}}
+                  />
+                  Saturday
+                </label>
+              </div>
+              <div>
+                <label style={{display: 'inline-flex'}}>
+                  <input 
+                  type="checkbox"
+                  value="Sunday"
+                  // checked={isChecked1}
+                  onChange={(e) => {e.target.checked? addDay(0): removeDay(0)}}
+                  />
+                  Sunday
+                </label>
               </div>
 
               {/* Display error message if start time is greater than end time or time diff is less than 30 minutes */}

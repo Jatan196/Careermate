@@ -18,6 +18,7 @@ import QuizReport from './components/quiz/quizReport';
 import { QuizProvider } from './components/quiz/quizContext';
 import StudentEdit from './components/StudentEdit';
 import CounsellorEdit from './components/CounsellorEdit';
+import CareerRoadmap from './components/resource-roadmap';
 
 function App() {
   
@@ -47,6 +48,7 @@ function App() {
             <Route path="/StudentEdit" element={<StudentEdit />} />
             <Route path="/CounsellorEdit" element={<CounsellorEdit />} />
             <Route path="/QuizWindow" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
+            <Route path='/Resource' element={<CareerRoadmap />} />
 
             {/* <Route path='/QuizProvider' element={<QuizProvider />} /> */}
           </Routes>

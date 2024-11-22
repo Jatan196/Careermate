@@ -119,7 +119,12 @@ export const getAllSlots = async (req, res) => {
 
     // console.log("hi");
     try {
-        const slots = await pool.query(`SELECT * FROM Timeslot where counsellor_id = ${id}`);
+        const slots = await pool.query(`SELECT t.slot_id, t.counsellor_id, t.start_time, t.end_time, 
+            to_char(current_date+((t.day-extract(dow from current_date)+7)%7)::int, 'dd-mm-yyyy') as day
+            FROM Timeslot t where counsellor_id = ${id} and 
+            not exists(select * from request where slot_id=t.slot_id and counsellor_id=t.counsellor_id and status_of_request in ('Pending','Accepted')) 
+            order by day asc, start_time asc, end_time asc`);
+        
         res.json({
             slots
         });
@@ -146,16 +151,22 @@ export const getInfoById = async (req, res) => {
 
 // ------------------------------------------------------------------------------------------
 export const addNewSlot = async (req, res) => {
-    const { counsellor_id, start_time, end_time } = req.body;
+    const { counsellor_id, start_time, end_time, days } = req.body;
     //const sid=500;
     try {
         // Insert new timeslot into the database and automatically get the generated slot_id
-        const result = await pool.query(
-            `INSERT INTO Timeslot (counsellor_id, start_time, end_time)
-            VALUES ($1, $2, $3)
-            RETURNING slot_id`,  // This returns the generated slot_id
-            [counsellor_id, start_time, end_time]
-        );
+        days.forEach(async (day) => {
+            const quer = await pool.query(`select * from timeslot where (counsellor_id, start_time, end_time, day)=
+                ($1, $2, $3, $4)`, [counsellor_id, start_time, end_time, day]);
+            if (quer.rowCount === 0) {
+                const result = await pool.query(
+                    `INSERT INTO Timeslot (counsellor_id, start_time, end_time, day)
+                VALUES ($1, $2, $3, $4)
+                RETURNING slot_id`,  // This returns the generated slot_id
+                    [counsellor_id, start_time, end_time, day]
+                );
+            }
+        });
 
         //const newSlotId = result.rows[0].slot_id;  // Access the newly generated slot_id
         res.status(201).json({ message: "Timeslot added successfully" });// ,"newSlotId":newSlotId});
@@ -197,8 +208,8 @@ export const viewRequests = async (req, res) => {
         console.log(requests);
         var slots = [];
         for (let i = 0; i < requests.rows.length; i++) {
-            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`,[requests.rows[i]['slot_id']]);
-            const stuReq = await pool.query(`select name,email from student where id=$1`,[requests.rows[i]['student_id']]);
+            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`, [requests.rows[i]['slot_id']]);
+            const stuReq = await pool.query(`select name,email from student where id=$1`, [requests.rows[i]['student_id']]);
             slots.push({
                 slot_id: requests.rows[i]['slot_id'],
                 sId: requests.rows[i]['student_id'],

@@ -5,6 +5,7 @@ const SlotTable = ({ slots, onSelect }) => {
     <table className="w-full mt-4">
       <thead>
         <tr>
+          <th className="text-left">Date</th>
           <th className="text-left">Start-Time</th>
           <th className="text-left">End-Time</th>
           <th></th>
@@ -13,6 +14,7 @@ const SlotTable = ({ slots, onSelect }) => {
       <tbody>
         {slots.map((slot, index) => (
           <tr key={index}>
+            <td>{slot.day}</td>
             <td>{slot.start_time}</td>
             <td>{slot.end_time}</td>
             <td>
