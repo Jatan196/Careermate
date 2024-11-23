@@ -176,7 +176,7 @@ export const getInfoById = async (req, res) => {
 
 // ------------------------------------------------------------------------------------------
 export const addNewSlot = async (req, res) => {
-    const { counsellor_id, start_time, end_time, days } = req.body;
+    const { counsellor_id, start_time, end_time, days, status } = req.body;
     //const sid=500;
     try {
         // Insert new timeslot into the database and automatically get the generated slot_id
@@ -185,10 +185,10 @@ export const addNewSlot = async (req, res) => {
                 ($1, $2, $3, $4)`, [counsellor_id, start_time, end_time, day]);
             if (quer.rowCount === 0) {
                 const result = await pool.query(
-                    `INSERT INTO Timeslot (counsellor_id, start_time, end_time, day)
-                VALUES ($1, $2, $3, $4)
+                    `INSERT INTO Timeslot (counsellor_id, start_time, end_time, day, status)
+                VALUES ($1, $2, $3, $4, $5)
                 RETURNING slot_id`,  // This returns the generated slot_id
-                    [counsellor_id, start_time, end_time, day]
+                    [counsellor_id, start_time, end_time, day, status]
                 );
             }
         });

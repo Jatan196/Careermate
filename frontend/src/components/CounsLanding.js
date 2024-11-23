@@ -167,7 +167,8 @@ function CounsLanding() {
           counsellor_id: localStorage.getItem('counsId'),
           start_time: startTime,
           end_time: endTime,
-          days: arrDays
+          days: arrDays,
+          status: true
         });
         console.log(response);
       } catch (error) {
