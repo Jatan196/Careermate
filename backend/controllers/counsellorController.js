@@ -113,15 +113,15 @@ export const getAllCounsInfo = async (req, res) => {
         res.status(500).json({ error: 'Database connection failed' });
     }
 };
-export const getAllSlots = async (req, res) => {
+export const getActiveSlots = async (req, res) => {
     const { id } = req.query;
     console.log(id);
 
     // console.log("hi");
     try {
-        const slots = await pool.query(`SELECT t.slot_id, t.counsellor_id, t.start_time, t.end_time, 
+        const slots = await pool.query(`SELECT t.slot_id, t.start_time, t.end_time, 
             to_char(current_date+((t.day-extract(dow from current_date)+7)%7)::int, 'dd-mm-yyyy') as day
-            FROM Timeslot t where counsellor_id = ${id} and 
+            FROM Timeslot t where counsellor_id = ${id} and status=true and
             not exists(select * from request where slot_id=t.slot_id and counsellor_id=t.counsellor_id and status_of_request in ('Pending','Accepted')) 
             order by day asc, start_time asc, end_time asc`);
         
@@ -134,13 +134,38 @@ export const getAllSlots = async (req, res) => {
         res.status(500).json({ error: 'Database connection failed' });
     }
 }
+
+export const getAllSlots = async (req, res) => {
+    const { id } = req.query;
+    console.log(id);
+
+    // console.log("hi");
+    try {
+        const slots = await pool.query(`SELECT t.slot_id, t.start_time, t.end_time, t.status, 
+            to_char(current_date+((t.day-extract(dow from current_date)+7)%7)::int, 'dd-mm-yyyy') as day
+            FROM Timeslot t where counsellor_id = ${id} and
+            not exists(select * from request where slot_id=t.slot_id and counsellor_id=t.counsellor_id and status_of_request in ('Pending','Accepted')) 
+            order by day asc, start_time asc, end_time asc`);
+        
+        res.json({
+            slots
+        });
+    }
+    catch (err) {
+        console.error('D', err.stack);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+}
+
 export const getInfoById = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.query;
 
     try {
-        const info = await pool.query(`SELECT * FROM Counsellor where id=${id}`);
+        const info = await pool.query(`SELECT email,experience,highest_qualification,name,phone,rating FROM Counsellor where id=${id}`);
+        const domains = await pool.query(`select domain from domains where id=${id}`);
+        const reviews = await pool.query(`select review from review where counsellor_id=${id}`);
         res.json({
-            info
+            info, domains, reviews
         });
     }
     catch (err) {
@@ -173,6 +198,26 @@ export const addNewSlot = async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Failed to add new timeslot" });
+    }
+};
+
+export const changeSlotStatus = async (req, res) => {
+    const { addSlots, removeSlots } = req.body;
+    //const sid=500;
+    try {
+        // Insert new timeslot into the database and automatically get the generated slot_id
+        addSlots.forEach(async (slot) => {
+            const quer = await pool.query(`update timeslot set status=true where slot_id=$1`, [slot]);
+        });
+        removeSlots.forEach(async (slot) => {
+            const quer = await pool.query(`update timeslot set status=false where slot_id=$1`, [slot]);
+        });
+
+        //const newSlotId = result.rows[0].slot_id;  // Access the newly generated slot_id
+        res.status(201).json({ message: "Timeslots updated successfully" });// ,"newSlotId":newSlotId});
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to update timeslots" });
     }
 };
 

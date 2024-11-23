@@ -19,15 +19,17 @@ import { QuizProvider } from './components/quiz/quizContext';
 import StudentEdit from './components/StudentEdit';
 import CounsellorEdit from './components/CounsellorEdit';
 import CareerRoadmap from './components/resource-roadmap';
+import StudRequests from './components/StudRequests';
+import CounsProfile from './components/CounsProfile';
 
 function App() {
   
   return (
     <div className="flex h-screen">
-      {/* Sidebar on the left */}
+      {/* Sidebar on the left
       <div className="flex-shrink-0 text-white">
       <VerticalNavBar />
-      </div> 
+      </div>  */}
 
       {/* Main content on the right */}
       <div className="flex-grow bg-gray-100 p-6 overflow-auto ml-60">
@@ -49,6 +51,9 @@ function App() {
             <Route path="/CounsellorEdit" element={<CounsellorEdit />} />
             <Route path="/QuizWindow" element={<QuizProviderComponent><QuizWindow /></QuizProviderComponent>} />
             <Route path='/Resource' element={<CareerRoadmap />} />
+            <Route path='/StudRequests' element={<StudRequests />} />
+            <Route path='/CounsProfile/:id' element={<CounsProfile />} />
+            {/* <Route path='/Navbar' element={<VerticalNavBar />} /> */}
 
             {/* <Route path='/QuizProvider' element={<QuizProvider />} /> */}
           </Routes>

@@ -8,12 +8,13 @@ const Card = ({ counselor }) => {
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [showBookingPopup, setShowBookingPopup] = useState(false);
   const [slots, setSlots] = useState();
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const fetchSlots = async () => {
       console.log(counselor.id);
       try {
-        const response = await axios(`http://localhost:5001/api/v1/counsellor/getAllSlots`, {
+        const response = await axios(`http://localhost:5001/api/v1/counsellor/getActiveSlots`, {
           params: {
             id: counselor.id,
           }
@@ -28,6 +29,14 @@ const Card = ({ counselor }) => {
     fetchSlots();
   }, [counselor.id]); // Effect depends on the counsellorId
 
+
+  const styles = {
+    base: {
+      color: "blueviolet",
+      textDecoration: isHovered? "underline": "none"
+    },
+  };
+
   const handleSlotSelect = (slot) => {
     setSelectedSlot(slot);
     setShowBookingPopup(true);
@@ -39,7 +48,12 @@ const Card = ({ counselor }) => {
         <div>
           <h3 className="text-xl font-bold">{counselor.name}</h3>
           <p><b>Experience : </b>{counselor.experience ? counselor.experience : 0} years</p>
-          <p><b>Rating : </b>{counselor.rating ? counselor.rating : 'Not rated yet'}</p>
+          <p><b>Rating : </b>{counselor.rating ? `${counselor.rating}★` : 'Not rated yet'}</p>
+          <br />
+          <a href={`/CounsProfile/${counselor.id}`} target='_blank' style={styles.base}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >View Profile</a>
         </div>
         <button
           onClick={() => setShowSlots(!showSlots)}

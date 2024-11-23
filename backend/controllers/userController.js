@@ -274,6 +274,35 @@ function stringToInteger(str) {
     return result;
 }
 
+export const getRequests = async (req, res) => {
+    const { sId } = req.query;
+    try {
+        const requests = await pool.query(`SELECT counsellor_id,slot_id,status_of_request FROM Request where student_id=$1`, [sId]);
+        console.log(requests);
+        var slots = [];
+        for (let i = 0; i < requests.rows.length; i++) {
+            const slotReq = await pool.query(`select start_time,end_time from timeslot where slot_id=$1`, [requests.rows[i]['slot_id']]);
+            const stuReq = await pool.query(`select name,email from counsellor where id=$1`, [requests.rows[i]['counsellor_id']]);
+            slots.push({
+                slot_id: requests.rows[i]['slot_id'],
+                cName: stuReq.rows[0]['name'],
+                cEmail: stuReq.rows[0]['email'],
+                start_time: slotReq.rows[0]['start_time'],
+                end_time: slotReq.rows[0]['end_time'],
+                status: requests.rows[i]['status_of_request']
+            });
+        }
+        res.json({
+            message: "Got all Requests",
+            slots
+        });
+    }
+    catch (err) {
+        console.error('D', err.stack);
+        res.status(500).json({ error: 'Database connection failed' });
+    }
+};
+
 // export const makeQuiz = async (req,res)=>{
 //     const {stud_id} = req.body;
 

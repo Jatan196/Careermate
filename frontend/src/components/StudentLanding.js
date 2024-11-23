@@ -4,6 +4,7 @@ import './StudentLanding.css';
 import { useLocation } from 'react-router-dom';
 import Printing from './Report';
 import axios from 'axios';
+import VerticalNavBar from './verticalNavBar';
 
 const StudentLanding = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -94,6 +95,7 @@ const StudentLanding = () => {
 
   return (
     <div className="student-landing">
+      <VerticalNavBar></VerticalNavBar>
       {/* Header Section */}
       <header className="header">
         <div className="logo">CareerMate</div>
@@ -104,6 +106,7 @@ const StudentLanding = () => {
             <li><a href="/report">Report</a></li>
             <li><a href="/counsellor">Counselling</a></li>
             <li><a href="/Resource">Resource</a></li>
+            <li><a href="/StudRequests">Requests</a></li>
           </ul>
         </nav>
         {/* <div className="user-icon">CM</div> Placeholder for user profile icon */}

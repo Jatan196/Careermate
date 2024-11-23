@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './StudentLogin.css';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import VerticalNavBar from './verticalNavBar';
 
 const StudentLogin = () => {
   const [email, setEmail] = useState('');

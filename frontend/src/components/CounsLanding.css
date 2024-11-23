@@ -152,7 +152,7 @@ main {
 }
 /* Add Slot Modal Styling */
 .modal {
-position: fixed;
+position:absolute;
 z-index: 1;
 left: 0;
 top: 0;
@@ -166,13 +166,22 @@ background-color: white;
 margin: 15% auto;
 padding: 20px;
 border: 1px solid #888;
-width: 30%;
+width: 23%;
 border-radius: 10px;
 text-align: left;
+scroll-behavior:auto;
 }
 
 .modal-content h2 {
 margin-bottom: 20px;
+}
+
+.modal-content h3 {
+  margin-bottom: 20px;
+  font-size:x-large;
+  font-weight: bold;
+  text-align: center;
+  color:darkblue;
 }
 
 .modal-content input {
@@ -181,6 +190,10 @@ width: 100%;
 padding: 8px;
 border: 1px solid #ccc;
 border-radius: 4px;
+}
+
+.modal-content label {
+  width: 100%
 }
 
 .modal-content button {

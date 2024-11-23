@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './CounsLanding.css';
 import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -11,6 +11,10 @@ function CounsLanding() {
   const [endTime, setEndTime] = useState('00:00:00');
   const [days, setDays] = useState(new Set());
   const [errorMessage, setErrorMessage] = useState(''); // For displaying error messages
+  const [isManaging, setIsManaging] = useState(false);
+  const [slots, setSlots] = useState([]);
+  const [addSlots, setAddSlots] = useState(new Set());
+  const [removeSlots, setRemoveSlots] = useState(new Set());
   // const location = useLocation();
 
   const counselorDetails = {
@@ -38,16 +42,29 @@ function CounsLanding() {
     setIsModalOpen(true);
   };
 
+  const manageSlots = () => {
+    setIsManaging(true);
+    // fetchSlots();
+  };
+
   const navigate = useNavigate();
   const viewRequests = () => {
     navigate("/requests");
-  }
+  };
 
   // Close the modal
   const closeModal = () => {
+    setDays(new Set());
     setIsModalOpen(false);
     setErrorMessage(''); // Clear error message when closing the modal
   };
+
+  const closeManager = () => {
+    setAddSlots(new Set());
+    setRemoveSlots(new Set());
+    // fetchSlots();
+    setIsManaging(false);
+  }
 
   const openDetailsModal = () => setIsDetailsModalOpen(true);
   const closeDetailsModal = () => setIsDetailsModalOpen(false);
@@ -84,10 +101,47 @@ function CounsLanding() {
     return endTotalMinutes > startTotalMinutes && (endTotalMinutes - startTotalMinutes) >= 30;
   };
 
+  useEffect(() => {
+    const fetchSlots = async () => {
+      // console.log(counselor.id);
+      try {
+        const response = await axios(`http://localhost:5001/api/v1/counsellor/getAllSlots`, {
+          params: {
+            id: localStorage.getItem('counsId'),
+          }
+        });
+        console.log(response);
+        const result = await response.data.slots.rows;
+        setSlots(result); // Assuming your query result is in rows
+      } catch (error) {
+        console.error('Error fetching slots:', error);
+      }
+    };
+    fetchSlots();
+  }, [isManaging]);
+
+  const handleSlots = (e) => {
+    // console.log(days);
+    const updateSlots = async () => {
+      try {
+        const arrDays = [...days];
+        const response = await axios.post(`http://localhost:5001/api/v1/counsellor/changeSlotStatus`, {
+          addSlots: [...addSlots],
+          removeSlots: [...removeSlots]
+        });
+        console.log(response);
+      } catch (error) {
+        console.error('Error updating slots:', error);
+      }
+    };
+    updateSlots();
+    closeManager();
+  }
+
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (days.size===0) {
+    if (days.size === 0) {
       setErrorMessage('Please select atleast one day of week');
       return;
     }
@@ -121,7 +175,7 @@ function CounsLanding() {
       }
     };
     addSlots();
-    setDays(new Set())
+    setDays(new Set());
 
     // Close the modal after submitting
     closeModal();
@@ -138,6 +192,7 @@ function CounsLanding() {
               <li>
                 <button className="hover:underline" onClick={openModal}>ADD SLOT</button>
               </li>
+              <li><button onClick={manageSlots} className="hover:underline">Manage Slots</button></li>
               <li><button onClick={viewRequests} className="hover:underline">REQUESTS</button></li>
             </ul>
           </nav>
@@ -210,78 +265,78 @@ function CounsLanding() {
               </div>
 
               <div>
-                <label style={{display: 'inline-flex', alignSelf: 'start'}}>
-                  <input 
-                  type="checkbox"
-                  value="Monday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(1): removeDay(1)}}
+                <label style={{ display: 'inline-flex', alignSelf: 'start' }}>
+                  <input
+                    type="checkbox"
+                    value="Monday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(1) : removeDay(1) }}
                   />
                   Monday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Tuesday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(2): removeDay(2)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Tuesday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(2) : removeDay(2) }}
                   />
                   Tuesday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Wednesday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(3): removeDay(3)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Wednesday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(3) : removeDay(3) }}
                   />
                   Wednesday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Thursday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(4): removeDay(4)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Thursday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(4) : removeDay(4) }}
                   />
                   Thursday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Friday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(5): removeDay(5)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Friday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(5) : removeDay(5) }}
                   />
                   Friday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Saturday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(6): removeDay(6)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Saturday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(6) : removeDay(6) }}
                   />
                   Saturday
                 </label>
               </div>
               <div>
-                <label style={{display: 'inline-flex'}}>
-                  <input 
-                  type="checkbox"
-                  value="Sunday"
-                  // checked={isChecked1}
-                  onChange={(e) => {e.target.checked? addDay(0): removeDay(0)}}
+                <label style={{ display: 'inline-flex' }}>
+                  <input
+                    type="checkbox"
+                    value="Sunday"
+                    // checked={isChecked1}
+                    onChange={(e) => { e.target.checked ? addDay(0) : removeDay(0) }}
                   />
                   Sunday
                 </label>
@@ -330,10 +385,38 @@ function CounsLanding() {
             <p><strong>Phone:</strong> {counselorDetails.phone}</p>
             <p><strong>Qualification:</strong> {counselorDetails.qualification}</p>
             <div className='profButtons'>
-              
-            <button className='editButton' onClick={editProfile} style={{display: 'flex'}}>Edit Profile</button>
-            <button className='logoutButton' onClick={logout} style={{display: 'flex'}}>Logout</button>
+
+              <button className='editButton' onClick={editProfile} style={{ display: 'flex' }}>Edit Profile</button>
+              <button className='logoutButton' onClick={logout} style={{ display: 'flex' }}>Logout</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {isManaging && (
+        <div className='modal'>
+          <div className='modal-content'>
+            <h3>Manage Counselling Time Slots</h3>
+            <br />
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <b>Timeslot</b>
+              <b>Open/Closed</b>
+            </div>
+            <br />
+            <form onSubmit={handleSlots}>
+              {slots.map((slot, index) => (
+                <label key={index} style={{ display: 'inline-flex' }}>
+                  {slot.day}({slot.start_time}-{slot.end_time})
+                  <input
+                    type="checkbox"
+                    defaultChecked={slot.status}
+                    onChange={(e) => { e.target.checked ? setAddSlots(new Set([...addSlots, slot.slot_id])) : setRemoveSlots(new Set([...removeSlots, slot.slot_id])) }}
+                  />
+                </label>
+              ))}
+              <button type="submit">Submit</button>
+              <button type="button" onClick={closeManager}>Close</button>
+            </form>
           </div>
         </div>
       )}

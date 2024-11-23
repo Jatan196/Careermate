@@ -41,7 +41,7 @@ const CounsellorList = () => {
   };
 
   return (
-    <div className="flex" style={{marginLeft: "192px"}}>
+    <div className="flex">
       {/* <VerticalNavBar /> */}
       <div className="p-4 w-full">
         {/* <Filter filters={filters} onChange={handleFilterChange} /> */}

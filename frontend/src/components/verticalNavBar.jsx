@@ -1,7 +1,8 @@
 import React from 'react';
-import './verticalNavBar.css'
+import './verticalNavBar.css';
+import { Link } from 'react-router-dom';
 
-const VerticalNavBar = () => {
+const VerticalNavBar = ({isStudent}) => {
   return (
     <div className='vNav'>
       <div className="h-screen w-48 bg-black text-white p-4 flex flex-col items-center">
@@ -20,9 +21,21 @@ const VerticalNavBar = () => {
 
         {/* </nav> */}
         <div className='p-5 top-0'>
-          <h1 className="stitle p-5">CareerMate</h1>
-          <h3 className="stag p-5">Enlightening Futures, Nurturing Success</h3>
+          <h1 className="stitle p-1">CareerMate</h1>
+          <h3 className="stag p-3">Enlightening Futures, Nurturing Success</h3>
           <br /><br /><br />
+
+          <ul className style={{alignItems: 'center'}}>
+            <li><Link to="/StudentLanding" style={{padding: '60px'}}>Home</Link></li>
+            <br />
+            <li><Link to="/QuizWindow" style={{padding: '63px'}}>Quiz</Link></li>
+            <br />
+            {/* <li><a href="#report">Report</a></li> */}
+            <li><Link to="/counsellor" style={{padding: '40px'}}>Counselling</Link></li>
+            <br />
+            <li><Link to="/Resource" style={{padding: '10px'}}>Roadmaps/Resources</Link></li>
+            
+          </ul>
         </div>
       </div>
     </div>
