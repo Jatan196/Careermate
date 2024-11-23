@@ -193,7 +193,7 @@ function CounsLanding() {
               <li>
                 <button className="hover:underline" onClick={openModal}>ADD SLOT</button>
               </li>
-              <li><button onClick={manageSlots} className="hover:underline">Manage Slots</button></li>
+              <li><button onClick={manageSlots} className="hover:underline">MANAGE SLOTS</button></li>
               <li><button onClick={viewRequests} className="hover:underline">REQUESTS</button></li>
             </ul>
           </nav>
@@ -415,6 +415,7 @@ function CounsLanding() {
                   />
                 </label>
               ))}
+              <br />
               <button type="submit">Submit</button>
               <button type="button" onClick={closeManager}>Close</button>
             </form>
